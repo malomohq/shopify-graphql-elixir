@@ -4,7 +4,7 @@ defmodule Shopify.GraphQL.Request do
   @spec send(binary | Shopify.GraphQL.Operation.t(), map) ::
         { :ok, Shopify.GraphQL.Response.t() } | { :error, any }
   def send(operation_or_query, config \\ %{})
-  
+
   def send(query, config) when is_binary(query) do
     operation = %Shopify.GraphQL.Operation{ query: query }
 
