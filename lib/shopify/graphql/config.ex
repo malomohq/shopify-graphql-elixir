@@ -17,7 +17,7 @@ defmodule Shopify.GraphQL.Config do
   defstruct access_token: nil,
             endpoint: "/graphql.json",
             host: "myshopify.com",
-            http_client: nil,
+            http_client: Shopify.GraphQL.Client.Hackney,
             http_client_opts: [],
             json_codec: Jason,
             path: "/admin/api",
