@@ -1,7 +1,7 @@
 defmodule Shopify.GraphQL.Request do
   alias Shopify.GraphQL.{ Helpers }
 
-  def send(operation, config) do
+  def send(operation, config \\ %{}) do
     query = operation.query
     variables = operation.variables
 
