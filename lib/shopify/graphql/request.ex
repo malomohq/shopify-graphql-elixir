@@ -1,9 +1,17 @@
 defmodule Shopify.GraphQL.Request do
   alias Shopify.GraphQL.{ Helpers }
 
-  @spec send(Shopify.GraphQL.Operation.t(), map) ::
+  @spec send(binary | Shopify.GraphQL.Operation.t(), map) ::
         { :ok, Shopify.GraphQL.Response.t() } | { :error, any }
-  def send(operation, config \\ %{}) do
+  def send(operation_or_query, config \\ %{})
+  
+  def send(query, config) when is_binary(query) do
+    operation = %Shopify.GraphQL.Operation{ query: query }
+
+    Shopify.GraphQL.Request.send(operation, config)
+  end
+
+  def send(operation, config) do
     config = Shopify.GraphQL.Config.new(config)
 
     query = operation.query
