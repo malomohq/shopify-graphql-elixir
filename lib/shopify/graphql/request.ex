@@ -1,7 +1,11 @@
 defmodule Shopify.GraphQL.Request do
   alias Shopify.GraphQL.{ Helpers }
 
+  @spec send(Shopify.GraphQL.Operation.t(), map) ::
+        { :ok, Shopify.GraphQL.Response.t() } | { :error, any }
   def send(operation, config \\ %{}) do
+    config = Shopify.GraphQL.Config.new(config)
+
     query = operation.query
     variables = operation.variables
 
