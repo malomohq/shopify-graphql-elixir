@@ -19,7 +19,7 @@ defmodule Shopify.GraphQL.Config do
             host: "myshopify.com",
             http_client: nil,
             http_client_opts: [],
-            json_codec: nil,
+            json_codec: Jason,
             path: "/admin/api",
             port: nil,
             protocol: "https",
