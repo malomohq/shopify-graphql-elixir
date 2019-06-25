@@ -15,12 +15,12 @@ defmodule Shopify.GraphQL.Config do
           }
 
   defstruct access_token: nil,
-            endpoint: "/graphql.json",
+            endpoint: "graphql.json",
             host: "myshopify.com",
             http_client: Shopify.GraphQL.Client.Hackney,
             http_client_opts: [],
             json_codec: Jason,
-            path: "/admin/api",
+            path: "admin/api",
             port: nil,
             protocol: "https",
             shop: nil,
