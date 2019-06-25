@@ -2,9 +2,9 @@ defmodule Shopify.GraphQL.Client.Hackney do
   @behaviour Shopify.GraphQL.Client
 
   @spec request(
-          Shopify.GraphQL.Client.method_t(),
+          Shopify.GraphQL.http_method_t(),
           String.t(),
-          Shopify.GraphQL.Client.headers_t(),
+          Shopify.GraphQL.http_headers_t(),
           String.t(),
           any
         ) :: { :ok, Shopify.GraphQL.Client.response_t() } | { :error, any }

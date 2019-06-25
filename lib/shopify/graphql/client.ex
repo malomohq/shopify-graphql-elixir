@@ -3,19 +3,17 @@ defmodule Shopify.GraphQL.Client do
   Behaviour for implementing an HTTP client.
   """
 
-  @type headers_t ::
-        [{ String.t(), String.t() }]
-
-  @type method_t ::
-        :delete | :get | :post | :put
-
   @type response_t ::
-        %{ body: binary, headers: headers_t, status_code: pos_integer }
+          %{
+            body: binary,
+            headers: Shopify.GraphQL.http_headers_t,
+            status_code: pos_integer
+          }
 
   @callback request(
-              method :: method_t,
+              method :: Shopify.GraphQL.http_method_t,
               url :: String.t(),
-              headers :: headers_t,
+              headers :: Shopify.GraphQL.http_headers_t,
               body :: binary,
               opts :: any
             ) :: { :ok, response_t() } | { :error, any }
