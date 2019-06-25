@@ -7,7 +7,8 @@ defmodule Shopify.GraphQL.MixProject do
       version: "0.0.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      package: package()
     ]
   end
 
@@ -19,5 +20,16 @@ defmodule Shopify.GraphQL.MixProject do
 
   defp deps do
     []
+  end
+
+  defp package do
+    %{
+      description: "Elixir client for the GraphQL admin API",
+      maintainers: ["Anthony Smith"],
+      licenses: ["MIT"],
+      links: %{
+        GitHub: "https://github.com/malomohq/shopify-graphql"
+      }
+    }
   end
 end
