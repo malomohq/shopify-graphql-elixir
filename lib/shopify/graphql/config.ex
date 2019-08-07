@@ -24,7 +24,7 @@ defmodule Shopify.GraphQL.Config do
             port: nil,
             protocol: "https",
             shop: nil,
-            version: "2019-04"
+            version: "2019-07"
 
   @doc """
   Build a config struct.
