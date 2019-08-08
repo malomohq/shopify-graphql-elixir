@@ -37,7 +37,7 @@ Shopify.GraphQL.send(query)
 You can manage variables using the `Shopify.GraphQL.put_variable/3` function.
 
 ```elixir
-operation =
+query =
   """
   {
     query GetCustomer($customerId: ID!) {
@@ -45,29 +45,15 @@ operation =
     }
   }
   """
-  |> Shopify.GraphQL.put_variable(:customerId, "gid://shopify/Customer/12195007594552")
-  |> Shopify.GraphQL.send()
+
+query
+|> Shopify.GraphQL.put_variable(:customerId, "gid://shopify/Customer/12195007594552")
+|> Shopify.GraphQL.send()
 ```
 
 ## Configuration
 
-You can provide application level configuration in `config.exs` using the
-`:shopify_graphql` key.
-
-```
-config :shopify_graphql,
-         access_token: "xxx",
-         shop: "johns-apparel"
-```
-
-Additionally, you may pass an optional map to `Shopify.GraphQL.send/2` for
-per-request configuration.
-
-``` elixir
-Shopify.GraphQL.send(query, %{ access_token: "xxx", shop: "johns-apparel" })
-```
-
-### Configuration Options
+Configuration is passed as a map to the second argument of Shopify.GraphQL.request/2.
 
 * `:access_token` - Shopify access token for making authenticated requests
 * `:endpoint` - endpoint for making GraphQL requests. Defaults to
