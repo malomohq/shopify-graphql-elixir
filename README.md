@@ -8,7 +8,7 @@ Add it to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:shopify_graphql, "~> 0.1"}
+    {:shopify_graphql, "~> 1.0"}
   ]
 end
 ```
