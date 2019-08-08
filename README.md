@@ -83,4 +83,4 @@ Shopify.GraphQL.send(query, %{ access_token: "xxx", shop: "johns-apparel" })
 * `:port` - the HTTP port used when making requests
 * `:protocol` - the HTTP protocol when making requests. Defaults to `https`.
 * `:shop` - name of the shop that a request is being made to
-* `:version` - version of the API to use. Defaults to `2019-04`.
+* `:version` - version of the API to use. Defaults to `2019-07`.
