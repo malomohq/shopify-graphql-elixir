@@ -9,6 +9,7 @@ defmodule Shopify.GraphQL.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       dialyzer: [plt_add_apps: [:hackney]],
+      elixirc_paths: elixirc_paths(Mix.env()),
       package: package()
     ]
   end
@@ -39,4 +40,7 @@ defmodule Shopify.GraphQL.MixProject do
       }
     }
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test"]
+  defp elixirc_paths(_env), do: ["lib"]
 end
