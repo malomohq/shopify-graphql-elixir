@@ -1,19 +1,19 @@
 defmodule Shopify.GraphQL.Helpers.URLTest do
   use ExUnit.Case, async: true
 
+  alias Shopify.GraphQL.{ Config, Helpers }
+
   describe "new/1" do
-    test "with shop" do
-      shop = Shopify.GraphQL.Generators.gen_string()
+    test "with :shop" do
+      config = Config.new(%{ shop: "a-shop" })
 
-      config = Shopify.GraphQL.Config.new(%{ shop: shop })
-
-      assert Shopify.GraphQL.Helpers.URL.new(config) == "#{config.protocol}://#{shop}.#{config.host}/#{config.path}/#{config.version}/#{config.endpoint}"
+      assert Helpers.URL.new(config) == "#{config.protocol}://a-shop.#{config.host}/#{config.path}/#{config.version}/#{config.endpoint}"
     end
 
-    test "without shop" do
-      config = Shopify.GraphQL.Config.new()
+    test "without :shop" do
+      config = Config.new()
 
-      assert Shopify.GraphQL.Helpers.URL.new(config) == "#{config.protocol}://#{config.host}/#{config.path}/#{config.version}/#{config.endpoint}"
+      assert Helpers.URL.new(config) == "#{config.protocol}://#{config.host}/#{config.path}/#{config.version}/#{config.endpoint}"
     end
   end
 end
