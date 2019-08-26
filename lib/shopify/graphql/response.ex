@@ -10,7 +10,7 @@ defmodule Shopify.GraphQL.Response do
 
   defstruct [:body, :headers, :status_code]
 
-  @spec new(Shopify.Client.response_t(), Shopify.GraphQL.Config.t()) :: t
+  @spec new(Shopify.GraphQL.Client.response_t(), Shopify.GraphQL.Config.t()) :: t
   def new(response, config) do
     %__MODULE__{
       body: Helpers.JSON.decode(response.body, config),
