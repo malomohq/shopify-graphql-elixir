@@ -4,9 +4,11 @@ defmodule Shopify.GraphQL.Helpers.HeadersTest do
   alias Shopify.GraphQL.{ Config, Helpers }
 
   test "new/1" do
-    assert [
-      { "content-type", "application/json" },
-      { "x-shopify-access-token", "yaay" }
-    ] = Helpers.Headers.new(Config.new(%{ access_token: "yaay" }))
+    access_token = "yaay"
+
+    headers = Helpers.Headers.new(Config.new(%{ access_token: access_token }))
+
+    assert Enum.member?(headers, { "content-type", "application/json" })
+    assert Enum.member?(headers, { "x-shopify-access-token", access_token })
   end
 end
