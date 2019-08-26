@@ -39,7 +39,7 @@ defmodule Shopify.GraphQL.Request do
         { :error, Shopify.GraphQL.Response.new(response, config) }
       { :ok, %{ status_code: status_code } = response}
         when status_code >= 200 ->
-          { :ok, Shopify.GraphQL.Response.new(response, config) }
+        { :ok, Shopify.GraphQL.Response.new(response, config) }
       otherwise ->
         otherwise
     end
