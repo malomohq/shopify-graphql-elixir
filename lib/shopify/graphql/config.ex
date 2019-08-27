@@ -3,6 +3,7 @@ defmodule Shopify.GraphQL.Config do
           %__MODULE__{
             access_token: String.t(),
             endpoint: String.t(),
+            headers: list({ String.t(), any }),
             host: String.t(),
             http_client: module,
             http_client_opts: any,
@@ -16,6 +17,7 @@ defmodule Shopify.GraphQL.Config do
 
   defstruct access_token: nil,
             endpoint: "graphql.json",
+            headers: [],
             host: "myshopify.com",
             http_client: Shopify.GraphQL.Client.Hackney,
             http_client_opts: [],

@@ -3,9 +3,9 @@ defmodule Shopify.GraphQL.Helpers.Headers do
 
   @spec new(Shopify.GraphQL.Config.t()) :: Shopify.GraphQL.http_headers_t()
   def new(config) do
-    [
-      { "content-type", "application/json" },
-      { "x-shopify-access-token", config.access_token }
-    ]
+    []
+    ++ [{ "content-type", "application/json" }]
+    ++ [{ "x-shopify-access-token", config.access_token }]
+    ++ config.headers
   end
 end
