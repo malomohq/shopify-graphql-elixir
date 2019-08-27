@@ -60,6 +60,9 @@ Configuration is passed as a map to the second argument of Shopify.GraphQL.reque
 * `:access_token` - Shopify access token for making authenticated requests
 * `:endpoint` - endpoint for making GraphQL requests. Defaults to
                 `graphql.json`.
+* `:headers` - a list of additional headers to send when making a request.
+               Example: `[{"x-graphql-cost-include-fields", "true"}]`. Defaults
+               to `[]`.
 * `:host` - HTTP host to make requests to. Defaults to `myshopify.com`. Note
             that using `:host` rather than a combination of `:host` and `:shop`
             may be more convenient when working with public apps.
