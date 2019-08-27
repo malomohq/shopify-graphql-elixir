@@ -1,5 +1,7 @@
 # Shopify.GraphQL
 
+[![Actions Status](https://github.com/malomohq/shopify-graphql/workflows/ci/badge.svg)](https://github.com/malomohq/shopify-graphql/actions)
+
 ## Installation
 
 `shopify_graphql` is published on [Hex](https://hex.pm/packages/shopify_graphql).
