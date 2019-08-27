@@ -31,7 +31,7 @@ defmodule Shopify.GraphQLTest do
     setup do
       bypass = Bypass.open()
 
-      config = %{ host: "localhost", port: bypass.port, protocol: "http", shop: "a-shop" }
+      config = %{ host: "localhost", port: bypass.port, protocol: "http" }
 
       %{ bypass: bypass, config: config }
     end
