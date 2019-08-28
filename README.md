@@ -71,12 +71,10 @@ Configuration is passed as a map to the second argument of Shopify.GraphQL.reque
 * `:http_client_opts` - additional options passed to `:http_client`
 * `:json_codec` - codec for encoding and decoding JSON payloads
 * `:limiter` - whether to handle Shopify's rate limiting. When `false` a limiter
-               will not be used. By specifying either `true` or an atom a
-               limiter will be used. When `true` the process name for the
-               limiter will be `Shopify.GraphQL.Limiter`. If an atom is provided
-               that will be provided as the process name for the limiter.
-               Defaults to `false`. See the Rate Limiting section for more
-               details.
+               will not be used. When `true` the process name for the limiter
+               will be `Shopify.GraphQL.Limiter`. If an atom is provided that
+               will be provided as the process name for the limiter. Defaults to
+               `false`. See the Rate Limiting section for more details.
 * `:path` - path to the admin API. Defaults to `admin/api`.
 * `:port` - the HTTP port used when making requests
 * `:protocol` - the HTTP protocol when making requests. Defaults to `https`.
