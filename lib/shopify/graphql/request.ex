@@ -6,9 +6,15 @@ defmodule Shopify.GraphQL.Request do
   def send(operation_or_query, config \\ %{})
 
   def send(query, config) when is_binary(query) do
-    operation = %Shopify.GraphQL.Operation{ query: query }
+    __MODULE__.send(%Shopify.GraphQL.Operation{ query: query }, config)
+  end
 
-    Shopify.GraphQL.Request.send(operation, config)
+  def send(operation, %{ limiter: true } = config) do
+    __MODULE__.send(operation, %{ config | limiter: Shopify.GraphQL.Limiter })
+  end
+
+  def send(operation, %{ limiter: limiter } = config) when is_atom(limiter) do
+    limiter.send(limiter, operation, config)
   end
 
   def send(operation, config) do
@@ -22,7 +28,7 @@ defmodule Shopify.GraphQL.Request do
     body = Helpers.JSON.encode(%{ query: query, variables: variables }, config)
     headers = Helpers.Headers.new(config)
     method = :post
-    url = Helpers.URL.new(config)
+    url = Helpers.URL.to_string(config)
 
     result =
       config.http_client.request(
