@@ -55,7 +55,7 @@ query
 
 ## Configuration
 
-Configuration is passed as a map to the second argument of Shopify.GraphQL.request/2.
+Configuration is passed as a map to the second argument of `Shopify.GraphQL.send/2`.
 
 * `:access_token` - Shopify access token for making authenticated requests
 * `:endpoint` - endpoint for making GraphQL requests. Defaults to
