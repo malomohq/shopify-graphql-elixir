@@ -9,14 +9,6 @@ defmodule Shopify.GraphQL.Request do
     __MODULE__.send(%Shopify.GraphQL.Operation{ query: query }, config)
   end
 
-  def send(operation, %{ limiter: true } = config) do
-    __MODULE__.send(operation, %{ config | limiter: Shopify.GraphQL.Limiter })
-  end
-
-  def send(operation, %{ limiter: limiter } = config) when is_atom(limiter) do
-    limiter.send(limiter, operation, config)
-  end
-
   def send(operation, config) do
     config = Shopify.GraphQL.Config.new(config)
 
