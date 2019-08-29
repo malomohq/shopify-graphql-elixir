@@ -12,16 +12,27 @@ defmodule Shopify.GraphQL.Limiter do
 
   use DynamicSupervisor
 
+  alias Shopify.GraphQL.{ Helpers }
+
   #
   # client
   #
 
-  @spec send(atom, Shopify.GraphQL.Operation.t(), map) ::
-        { :ok, Shopify.GraphQL.Response.t() } | { :error, any }
-  def send(_server, _operation, _config) do
-    { :error, :not_implemented }
+  @doc """
+  Returns the shop name from `Shopify.GraphQL.Config`.
+  """
+  @spec get_shop_name(Shopify.GraphQL.Config.t()) :: String.t()
+  def get_shop_name(config) do
+    config
+    |> Helpers.URL.to_uri()
+    |> Map.get(:host)
   end
 
+  @doc """
+  Starts a `Shopify.GraphQL.Limiter` supervision tree and links it to the
+  current process.
+  """
+  @spec start_link(Keyword.t()) :: Supervisor.on_start()
   def start_link(opts) do
     DynamicSupervisor.start_link(__MODULE__, opts, name: get_name(opts))
   end
@@ -31,10 +42,8 @@ defmodule Shopify.GraphQL.Limiter do
   #
 
   @impl true
-  def init(opts) do
-    opts = opts ++ [strategy: :one_for_one]
-
-    DynamicSupervisor.init(opts)
+  def init(_opts) do
+    DynamicSupervisor.init(strategy: :one_for_one)
   end
 
   #
