@@ -13,8 +13,7 @@ defmodule Shopify.GraphQL do
           binary | Shopify.GraphQL.Operation.t(),
           binary | atom,
           any
-        ) ::
-        Shopify.GraphQL.Operation.t()
+        ) :: Shopify.GraphQL.Operation.t()
   defdelegate put_variable(operation_or_query, name, value),
     to: Shopify.GraphQL.Operation
 
