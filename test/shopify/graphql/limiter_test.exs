@@ -3,15 +3,22 @@ defmodule Shopify.GraphQL.LimiterTest do
 
   alias Shopify.GraphQL.{ Config, Limiter }
 
-  test "get_shop_name/1" do
+  test "get_shop_id/1" do
     config = Config.new(%{ shop: "a-shop" })
 
-    assert Limiter.get_shop_name(config) == "a-shop.myshopify.com"
+    assert Limiter.get_shop_id(config) == "a-shop.myshopify.com"
   end
 
-  test "starts", tags do
-    assert { :ok, pid } = Limiter.start_link(name: process_name(tags))
-    assert Process.alive?(pid)
+  test "start_link/1", tags do
+    assert { :ok, _pid } = Limiter.start_link(name: process_name(tags))
+  end
+
+  test "start_shop/2", tags do
+    limiter = process_name(tags)
+
+    Limiter.start_link(name: limiter)
+
+    assert { :ok, _pid } = Limiter.start_shop(limiter, "a-shop.myshopify.com")
   end
 
   #

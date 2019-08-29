@@ -19,10 +19,13 @@ defmodule Shopify.GraphQL.Limiter do
   #
 
   @doc """
-  Returns the shop name from `Shopify.GraphQL.Config`.
+  Returns the identifier used to name `Shopify.GraphQL.Limiter.Shop` processes.
+
+  The identifier is the shop host name (e.g. `some-shop.myshopify.com`) and
+  can be extracted from a `Shopify.GraphQL.Config` struct.
   """
-  @spec get_shop_name(Shopify.GraphQL.Config.t()) :: String.t()
-  def get_shop_name(config) do
+  @spec get_shop_id(Shopify.GraphQL.Config.t()) :: String.t()
+  def get_shop_id(config) do
     config
     |> Helpers.URL.to_uri()
     |> Map.get(:host)
@@ -35,6 +38,16 @@ defmodule Shopify.GraphQL.Limiter do
   @spec start_link(Keyword.t()) :: Supervisor.on_start()
   def start_link(opts) do
     DynamicSupervisor.start_link(__MODULE__, opts, name: get_name(opts))
+  end
+
+  @doc """
+  Starts a `Shopify.GraphQL.Limiter.Shop` supervision tree.
+  """
+  @spec start_shop(atom, String.t()) :: DynamicSupervisor.on_start_child()
+  def start_shop(server \\ __MODULE__, shop_id) do
+    spec = { __MODULE__.Shop, name: get_shop_name(server, shop_id) }
+
+    DynamicSupervisor.start_child(server, spec)
   end
 
   #
@@ -52,5 +65,9 @@ defmodule Shopify.GraphQL.Limiter do
 
   defp get_name(opts) do
     Keyword.get(opts, :name, __MODULE__)
+  end
+
+  defp get_shop_name(server, shop_id) do
+    Module.concat([server, "Shop:#{shop_id}"])
   end
 end
