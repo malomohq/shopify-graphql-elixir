@@ -9,12 +9,12 @@ defmodule Shopify.GraphQL.ResponseTest do
     headers = [{ "content-type", "application/json" }]
     status_code = 200
 
-    assert (
-      %Response {
-        body: %{ "ok" => true },
-        headers: ^headers,
-        status_code: ^status_code
-      } = Response.new(%{ body: "{\"ok\":true}", headers: headers, status_code: status_code }, config)
-    )
+    response = Response.new(%{ body: "{\"ok\":true}", headers: headers, status_code: status_code }, config)
+
+    assert %Response {
+             body: %{ "ok" => true },
+             headers: ^headers,
+             status_code: ^status_code
+           } = response
   end
 end
