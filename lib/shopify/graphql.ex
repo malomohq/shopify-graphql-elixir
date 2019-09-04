@@ -3,6 +3,8 @@ defmodule Shopify.GraphQL do
 
   @type http_method_t :: :delete | :get | :post | :put
 
+  @type response_t :: { :ok, Shopify.GraphQL.Response.t() } | { :error, any }
+
   @doc """
   Add a variable to the operation.
 
@@ -52,8 +54,7 @@ defmodule Shopify.GraphQL do
   You may also pass an optional map of config overrides. This allows you to
   use different config values on a per-request basis.
   """
-  @spec send(binary | Shopify.GraphQL.Operation.t(), map) ::
-        { :ok, Shopify.GraphQL.Response.t() } | { :error, any }
+  @spec send(binary | Shopify.GraphQL.Operation.t(), map) :: response_t
   defdelegate send(operation_or_query, config \\ %{}),
     to: Shopify.GraphQL.Request
 end
