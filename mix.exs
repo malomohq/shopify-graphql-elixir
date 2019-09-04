@@ -22,8 +22,9 @@ defmodule Shopify.GraphQL.MixProject do
 
   defp deps do
     [
-      { :hackney,  "~> 1.15", optional: true },
-      { :jason,    "~> 1.1",  optional: true },
+      { :gen_stage, "~> 0.14", optional: true },
+      { :hackney,   "~> 1.15", optional: true },
+      { :jason,     "~> 1.1",  optional: true },
       # dev
       { :dialyxir, "~> 1.0-rc", only: :dev, runtime: false },
       { :ex_doc,   "> 0.0.0",   only: :dev, runtime: false },
