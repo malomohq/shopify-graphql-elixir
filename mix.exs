@@ -8,7 +8,7 @@ defmodule Shopify.GraphQL.MixProject do
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      dialyzer: [plt_add_apps: [:hackney]],
+      dialyzer: [plt_add_apps: [:gen_stage, :hackney]],
       elixirc_paths: elixirc_paths(Mix.env()),
       package: package()
     ]
