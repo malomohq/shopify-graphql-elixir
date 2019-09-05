@@ -3,7 +3,9 @@ defmodule Shopify.GraphQL do
 
   @type http_method_t :: :delete | :get | :post | :put
 
-  @type response_t :: { :ok, Shopify.GraphQL.Response.t() } | { :error, any }
+  @type response_t ::
+          { :ok, Shopify.GraphQL.Response.t() }
+          | { :error, Shopify.GraphQL.Response.t() | any }
 
   @doc """
   Add a variable to the operation.
