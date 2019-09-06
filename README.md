@@ -76,6 +76,12 @@ Configuration is passed as a map to the second argument of `Shopify.GraphQL.send
                that will be provided as the process name for the limiter.
                Defaults to `false`. See the Rate Limiting section for more
                details.
+* `:limiter_opts` - a list of options to send to a limiter. Defaults to `[]`.
+  * `:restore_to` - the minimum cost for making requests when using the limiter.
+                    This value will only be used when the limiter is in a
+                    throttled state. Possible values include `:half`, `:max` and
+                    an integer. When using an integer the value must be less
+                    than the shop's maximum available cost. Defaults to `:half`.
 * `:path` - path to the admin API. Defaults to `admin/api`.
 * `:port` - the HTTP port used when making requests
 * `:protocol` - the HTTP protocol when making requests. Defaults to `https`.
