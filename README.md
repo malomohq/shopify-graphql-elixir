@@ -77,6 +77,8 @@ Configuration is passed as a map to the second argument of `Shopify.GraphQL.send
                Defaults to `false`. See the Rate Limiting section for more
                details.
 * `:limiter_opts` - a list of options to send to a limiter. Defaults to `[]`.
+  * `:max_requests` - the maximum number of concurrent requests per shop.
+                      Defaults to 3.
   * `:restore_to` - the minimum cost for making requests when using the limiter.
                     This value will only be used when the limiter is in a
                     throttled state. Possible values include `:half`, `:max` and
