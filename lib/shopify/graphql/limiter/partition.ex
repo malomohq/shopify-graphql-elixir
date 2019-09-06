@@ -86,11 +86,13 @@ defmodule Shopify.GraphQL.Limiter.Partition do
   defp opts_for_producer(opts) do
     parent = Keyword.fetch!(opts, :parent)
     partition_id = Keyword.fetch!(opts, :partition_id)
+    restore_to = Keyword.get(opts, :restore_to)
 
     Keyword.new()
     |> Keyword.put(:name, Limiter.Producer.name(parent, partition_id))
     |> Keyword.put(:parent, parent)
     |> Keyword.put(:partition_id, partition_id)
+    |> Keyword.put(:restore_to, restore_to)
     |> Enum.reject(fn({ _k, v }) -> is_nil(v) end)
   end
 end
