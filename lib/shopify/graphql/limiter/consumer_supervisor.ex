@@ -27,7 +27,7 @@ defmodule Shopify.GraphQL.Limiter.ConsumerSupervisor do
   name and a partition id. e.g.
   `Shopify.GraphQL.Limiter.ConsumerSupervisor:<partition_id>`.
   """
-  @spec name(atom, Shopify.GraphQL.Limiter.partition_id_t()) :: atom
+  @spec name(atom, Limiter.partition_id_t()) :: atom
   def name(parent, partition_id) do
     Module.concat([parent, "ConsumerSupervisor:#{partition_id}"])
   end

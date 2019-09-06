@@ -1,8 +1,9 @@
 defmodule Shopify.GraphQL.Helpers.Limiter do
-  @spec time_to_restore(
-          atom | number,
-          Shopify.GraphQL.Limiter.ThrottleState.t()
-        ) :: non_neg_integer
+  @moduledoc false
+
+  alias Shopify.GraphQL.{ Limiter }
+
+  @spec time_to_restore(atom | number, Limiter.ThrottleState.t()) :: non_neg_integer
   def time_to_restore(:half, throttle_state) do
     max = throttle_state.maximum_available
 

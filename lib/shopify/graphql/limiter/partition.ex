@@ -13,7 +13,7 @@ defmodule Shopify.GraphQL.Limiter.Partition do
   A partition is considered idle when the producer's queue is empty and the
   consumer supervisor has no children.
   """
-  @spec idle?(atom, Shopify.GraphQL.Limiter.partition_id_t()) :: boolean
+  @spec idle?(atom, Limiter.partition_id_t()) :: boolean
   def idle?(parent, partition_id) do
     consumer_supervisor = Limiter.ConsumerSupervisor.name(parent, partition_id)
     producer = Limiter.Producer.name(parent, partition_id)
@@ -30,7 +30,7 @@ defmodule Shopify.GraphQL.Limiter.Partition do
   A partition process's name is a combination of the parent limiter's name
   and a partition id. e.g. `Shopify.GraphQL.Limiter.Partition:<partition_id>`.
   """
-  @spec name(atom, Shopify.GraphQL.Limiter.partition_id_t()) :: atom
+  @spec name(atom, Limiter.partition_id_t()) :: atom
   def name(parent, partition_id) do
     Module.concat([parent, "Partition:#{partition_id}"])
   end

@@ -1,7 +1,7 @@
 defmodule Shopify.GraphQL.Limiter.Producer do
   use GenStage
 
-  alias Shopify.GraphQL.{ Helpers }
+  alias Shopify.GraphQL.{ Config, Helpers, Limiter, Operation }
 
   #
   # client
@@ -25,7 +25,7 @@ defmodule Shopify.GraphQL.Limiter.Producer do
   Note that this function will not throttle the producer. It is expected that
   a producer will be in a throttled state before a drain is initiated.
   """
-  @spec drain(GenStage.stage(), Shopify.GraphQL.Limiter.ThrottleState.t()) :: :ok
+  @spec drain(GenStage.stage(), Limiter.ThrottleState.t()) :: :ok
   def drain(server, throttle_state) do
     GenStage.call(server, { :drain, throttle_state })
   end
@@ -55,7 +55,7 @@ defmodule Shopify.GraphQL.Limiter.Producer do
   A producer process's name is a combination of the parent limiter's name
   and a partition id. e.g. `Shopify.GraphQL.Limiter.Producer:<partition_id>`.
   """
-  @spec name(atom, Shopify.GraphQL.Limiter.partition_id_t()) :: atom
+  @spec name(atom, Limiter.partition_id_t()) :: atom
   def name(parent, partition_id) do
     Module.concat([parent, "Producer:#{partition_id}"])
   end
@@ -63,7 +63,7 @@ defmodule Shopify.GraphQL.Limiter.Producer do
   @doc """
   Synchronously processes a request.
   """
-  @spec process(GenStage.stage(), Shopify.GraphQL.Operation.t(), Shopify.GraphQL.Config.t()) :: Shopify.GraphQL.response_t()
+  @spec process(GenStage.stage(), Operation.t(), Config.t()) :: Shopify.GraphQL.response_t()
   def process(server, operation, config) do
     GenStage.call(server, { :process, { operation, config } }, :infinity)
   end
@@ -81,7 +81,7 @@ defmodule Shopify.GraphQL.Limiter.Producer do
   @doc """
   Adds a request to the front of the processing queue.
   """
-  @spec retry(GenStage.stage(), Shopify.GraphQL.Operation.t(), Shopify.GraphQL.Config.t()) :: :ok
+  @spec retry(GenStage.stage(), Operation.t(), Config.t()) :: :ok
   def retry(server, operation, config) do
     GenStage.call(server, { :retry, { operation, config } })
   end

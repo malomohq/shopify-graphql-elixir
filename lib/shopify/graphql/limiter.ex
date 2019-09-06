@@ -1,7 +1,7 @@
 defmodule Shopify.GraphQL.Limiter do
   use DynamicSupervisor
 
-  alias Shopify.GraphQL.{ Helpers, Limiter }
+  alias Shopify.GraphQL.{ Config, Helpers, Limiter, Operation }
 
   @type partition_id_t :: atom | String.t()
 
@@ -9,14 +9,14 @@ defmodule Shopify.GraphQL.Limiter do
   # client
   #
 
-  @spec get_partition_id(Shopify.GraphQL.Config.t()) :: String.t()
+  @spec get_partition_id(Config.t()) :: String.t()
   def get_partition_id(config) do
     config
     |> Helpers.URL.to_uri()
     |> Map.get(:host)
   end
 
-  @spec send(atom, Shopify.GraphQL.Operation.t(), Shopify.GraphQL.Config.t()) :: Shopify.GraphQL.response_t()
+  @spec send(atom, Operation.t(), Config.t()) :: Shopify.GraphQL.response_t()
   def send(server, operation, config) do
     partition_id = get_partition_id(config)
 

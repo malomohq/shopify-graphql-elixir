@@ -1,4 +1,6 @@
 defmodule Shopify.GraphQL.Client.Hackney do
+  alias Shopify.GraphQL.{ Client } 
+
   @behaviour Shopify.GraphQL.Client
 
   @spec request(
@@ -7,7 +9,7 @@ defmodule Shopify.GraphQL.Client.Hackney do
           Shopify.GraphQL.http_headers_t(),
           String.t(),
           any
-        ) :: { :ok, Shopify.GraphQL.Client.response_t() } | { :error, any }
+        ) :: { :ok, Client.response_t() } | { :error, any }
   def request(method, url, headers, body, opts) do
     opts = opts ++ [:with_body]
 

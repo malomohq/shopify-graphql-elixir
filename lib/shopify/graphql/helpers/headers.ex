@@ -1,7 +1,9 @@
 defmodule Shopify.GraphQL.Helpers.Headers do
   @moduledoc false
 
-  @spec new(Shopify.GraphQL.Config.t()) :: Shopify.GraphQL.http_headers_t()
+  alias Shopify.GraphQL.{ Config }
+
+  @spec new(Config.t()) :: Shopify.GraphQL.http_headers_t()
   def new(config) do
     []
     ++ [{ "content-type", "application/json" }]

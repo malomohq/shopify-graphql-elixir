@@ -40,6 +40,8 @@ defmodule Shopify.GraphQL.Config do
   the application configuration.
   """
   @spec new(map | t) :: t
+  def new(overrides \\ %__MODULE__{})
+  
   def new(%__MODULE__{} = overrides) do
     Application.get_all_env(:shopify_graphql)
     |> Enum.into(%{})

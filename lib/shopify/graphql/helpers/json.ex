@@ -1,5 +1,9 @@
 defmodule Shopify.GraphQL.Helpers.JSON do
-  @spec decode(String.t(), Shopify.GraphQL.Config.t()) :: map
+  @moduledoc false
+
+  alias Shopify.GraphQL.{ Config }
+
+  @spec decode(String.t(), Config.t()) :: map
   def decode(string, config) do
     case config.json_codec.decode(string) do
       { :ok, result } ->
@@ -10,7 +14,7 @@ defmodule Shopify.GraphQL.Helpers.JSON do
   end
 
 
-  @spec encode(map, Shopify.GraphQL.Config.t()) :: String.t()
+  @spec encode(map, Config.t()) :: String.t()
   def encode(map, config) do
     case config.json_codec.encode(map) do
       { :ok, result } ->

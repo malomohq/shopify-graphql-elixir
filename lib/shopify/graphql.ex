@@ -66,6 +66,6 @@ defmodule Shopify.GraphQL do
   end
 
   def send(operation, config) do
-    Request.send(operation, config)
+    Request.send(operation, Config.new(config))
   end
 end

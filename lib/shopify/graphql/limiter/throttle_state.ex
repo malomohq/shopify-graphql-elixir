@@ -3,6 +3,8 @@ defmodule Shopify.GraphQL.Limiter.ThrottleState do
   Represents the throttle status returned by a Shopify response.
   """
 
+  alias Shopify.GraphQL.{ Response }
+
   @type t ::
           %__MODULE__{
             currently_available: integer,
@@ -16,7 +18,7 @@ defmodule Shopify.GraphQL.Limiter.ThrottleState do
   Returns a `Shopify.GraphQL.Limiter.ThrottleStatus` struct from a
   `Shopify.GraphQL.Response` struct.
   """
-  @spec from_response(Shopify.GraphQL.Response.t()) :: t
+  @spec from_response(Response.t()) :: t
   def from_response(response) do
     throttle_status =
       response

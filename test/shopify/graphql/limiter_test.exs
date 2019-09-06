@@ -22,10 +22,10 @@ defmodule Shopify.GraphQL.LimiterTest do
 
       Limiter.start_link(name: parent)
 
-      assert { :ok, _pid } = Limiter.start_partition(parent, partition_id)
+      assert { :ok, _pid } = Limiter.start_partition(parent, partition_id, [])
     end
 
-    test "returns { :ok, pid } if the partition has already been started", tags do
+    test "returns an existing pid if the partition has already been started", tags do
       line = Map.get(tags, :line)
       module = Map.get(tags, :module)
 
@@ -34,8 +34,8 @@ defmodule Shopify.GraphQL.LimiterTest do
 
       Limiter.start_link(name: parent)
 
-      assert { :ok, _pid } = Limiter.start_partition(parent, partition_id)
-      assert { :ok, _pid } = Limiter.start_partition(parent, partition_id)
+      assert { :ok, pid } = Limiter.start_partition(parent, partition_id, [])
+      assert { :ok, ^pid } = Limiter.start_partition(parent, partition_id, [])
     end
   end
 end
