@@ -21,8 +21,9 @@ defmodule Shopify.GraphQL.Limiter do
   """
   @spec start_partition(atom, partition_id_t) ::
         { :ok, pid } | { :error, term }
-  def start_partition(server, partition_id) do
-    spec = { __MODULE__.Partition, parent: server, partition_id: partition_id }
+  def start_partition(server, partition_id, opts \\ []) do
+    opts = [parent: server, partition_id: partition_id] ++ opts
+    spec = { __MODULE__.Partition, opts }
 
     case DynamicSupervisor.start_child(server, spec) do
       { :ok, pid } ->

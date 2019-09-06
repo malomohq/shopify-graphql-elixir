@@ -12,7 +12,7 @@ defmodule Shopify.GraphQL.LimiterTest do
     assert { :ok, _pid } = Limiter.start_link(name: name)
   end
 
-  describe "start_partition/2" do
+  describe "start_partition/3" do
     test "returns { :ok, pid } if not partition has been started", tags do
       line = Map.get(tags, :line)
       module = Map.get(tags, :module)
