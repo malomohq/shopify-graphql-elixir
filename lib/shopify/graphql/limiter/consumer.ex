@@ -15,9 +15,11 @@ defmodule Shopify.GraphQL.Limiter.Consumer do
 
     case Shopify.GraphQL.send(operation, config) do
       { :ok, %{ body: %{ "errors" => [%{ "message" => "Throttled" }] } } = response} ->
+        throttle_state = Limiter.ThrottleState.from_response(response)
+        
         Limiter.Producer.throttle(producer)
         Limiter.Producer.retry(producer, operation, config)
-        Limiter.Producer.drain(producer, Limiter.ThrottleState.from_response(response))
+        Limiter.Producer.drain(producer, throttle_state)
       otherwise ->
         GenStage.reply(owner, otherwise)
     end
