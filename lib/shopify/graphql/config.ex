@@ -39,13 +39,16 @@ defmodule Shopify.GraphQL.Config do
   map of optional overrides. If overrides are provided they will be merged with
   the application configuration.
   """
-  @spec new(map) :: t
-  def new(overrides \\ %{}) do
-    config =
-      Application.get_all_env(:shopify_graphql)
-      |> Enum.into(%{})
-      |> Map.merge(overrides)
+  @spec new(map | t) :: t
+  def new(%__MODULE__{} = overrides) do
+    Application.get_all_env(:shopify_graphql)
+    |> Enum.into(%{})
+    |> Map.merge(overrides)
+  end
 
-    struct(__MODULE__, config)
+  def new(overrides) do
+    overrides = struct(__MODULE__, overrides)
+
+    new(overrides)
   end
 end

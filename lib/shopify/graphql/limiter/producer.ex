@@ -16,7 +16,14 @@ defmodule Shopify.GraphQL.Limiter.Producer do
   end
 
   @doc """
-  Begins the drain process.
+  Begins the process of waiting for a shop's cost bucket to drain.
+
+  A drain will create a timer based on the minimum acceptable cost to
+  unthrottle the producer. Once the timer ends the producer will be put in a
+  restored state that will restart request processing.
+
+  Note that this function will not throttle the producer. It is expected that
+  a producer will be in a throttled state before a drain is initiated.
   """
   @spec drain(GenStage.stage(), Shopify.GraphQL.Limiter.ThrottleState.t()) :: :ok
   def drain(server, throttle_state) do
@@ -58,16 +65,22 @@ defmodule Shopify.GraphQL.Limiter.Producer do
   """
   @spec process(GenStage.stage(), Shopify.GraphQL.Operation.t(), Shopify.GraphQL.Config.t()) :: Shopify.GraphQL.response_t()
   def process(server, operation, config) do
-    GenStage.call(server, { :process, { operation, config }, false }, :infinity)
+    GenStage.call(server, { :process, { operation, config } }, :infinity)
   end
 
   @doc """
+  Puts the producer in a restored state and restarts processing requests.
+
+  This function is typically called after a drain has completed.
   """
   @spec restore(GenStage.stage()) :: :ok
   def restore(server) do
     GenStage.cast(server, :restore)
   end
 
+  @doc """
+  Adds a request to the front of the processing queue.
+  """
   @spec retry(GenStage.stage(), Shopify.GraphQL.Operation.t(), Shopify.GraphQL.Config.t()) :: :ok
   def retry(server, operation, config) do
     GenStage.call(server, { :retry, { operation, config } })
@@ -163,7 +176,7 @@ defmodule Shopify.GraphQL.Limiter.Producer do
   end
 
   @impl true
-  def handle_call({ :process, request, async }, from, state) do
+  def handle_call({ :process, request }, from, state) do
     event = %{ owner: from, producer: self(), request: request }
 
     state = push(state, event)
@@ -171,11 +184,7 @@ defmodule Shopify.GraphQL.Limiter.Producer do
 
     { events, state } = fulfill(state)
 
-    if async do
-      { :reply, :ok, events, state }
-    else
-      { :noreply, events, state }
-    end
+    { :noreply, events, state }
   end
 
   def handle_call({ :retry, request }, from, state) do

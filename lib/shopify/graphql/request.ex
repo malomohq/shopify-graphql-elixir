@@ -1,17 +1,8 @@
 defmodule Shopify.GraphQL.Request do
-  alias Shopify.GraphQL.{ Helpers }
+  alias Shopify.GraphQL.{ Config, Helpers, Operation, Response }
 
-  @spec send(binary | Shopify.GraphQL.Operation.t(), map) ::
-        { :ok, Shopify.GraphQL.Response.t() } | { :error, any }
-  def send(operation_or_query, config \\ %{})
-
-  def send(query, config) when is_binary(query) do
-    __MODULE__.send(%Shopify.GraphQL.Operation{ query: query }, config)
-  end
-
+  @spec send(Operation.t(), Config.t()) :: Shopify.GraphQL.response_t()
   def send(operation, config) do
-    config = Shopify.GraphQL.Config.new(config)
-
     query = operation.query
     variables = operation.variables
 
@@ -34,10 +25,10 @@ defmodule Shopify.GraphQL.Request do
     case result do
       { :ok, %{ status_code: status_code } = response}
         when status_code >= 400 ->
-        { :error, Shopify.GraphQL.Response.new(response, config) }
+        { :error, Response.new(response, config) }
       { :ok, %{ status_code: status_code } = response}
         when status_code >= 200 ->
-        { :ok, Shopify.GraphQL.Response.new(response, config) }
+        { :ok, Response.new(response, config) }
       otherwise ->
         otherwise
     end

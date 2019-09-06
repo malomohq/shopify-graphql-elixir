@@ -1,7 +1,7 @@
 defmodule Shopify.GraphQL.Limiter.Consumer do
   use Task
 
-  alias Shopify.GraphQL.{ Limiter }
+  alias Shopify.GraphQL.{ Limiter, Request }
 
   def start_link(event) do
     Task.start_link(__MODULE__, :run, [event])
@@ -13,10 +13,10 @@ defmodule Shopify.GraphQL.Limiter.Consumer do
 
     { operation, config } = Map.get(event, :request)
 
-    case Shopify.GraphQL.send(operation, config) do
+    case Request.send(operation, config) do
       { :ok, %{ body: %{ "errors" => [%{ "message" => "Throttled" }] } } = response} ->
         throttle_state = Limiter.ThrottleState.from_response(response)
-        
+
         Limiter.Producer.throttle(producer)
         Limiter.Producer.retry(producer, operation, config)
         Limiter.Producer.drain(producer, throttle_state)
