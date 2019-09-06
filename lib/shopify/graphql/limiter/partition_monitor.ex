@@ -69,7 +69,6 @@ defmodule Shopify.GraphQL.Limiter.PartitionMonitor do
 
     case Map.get(state, :idling?) do
       true ->
-        IO.puts("DED")
         stop(state)
       _otherwise ->
         schedule(state)
