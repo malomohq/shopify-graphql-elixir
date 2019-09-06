@@ -47,6 +47,11 @@ defmodule Shopify.GraphQL.Limiter.Partition do
     Supervisor.start_link(__MODULE__, opts, name: name(parent, partition_id))
   end
 
+  @spec stop(atom, Limiter.partition_id_t()) :: :ok
+  def stop(parent, partition_id) do
+    Supervisor.stop(name(parent, partition_id))
+  end
+
   #
   # callbacks
   #
@@ -63,12 +68,13 @@ defmodule Shopify.GraphQL.Limiter.Partition do
   defp children(opts) do
     [
       { Limiter.Producer, opts_for_producer(opts) },
-      { Limiter.ConsumerSupervisor, opts_for_consumer_supervisor(opts) }
+      { Limiter.ConsumerSupervisor, opts_for_consumer_supervisor(opts) },
+      { Limiter.PartitionMonitor, opts_for_partition_monitor(opts) }
     ]
   end
 
   defp opts_for_consumer_supervisor(opts) do
-    consumer = Keyword.get(opts, :consumer, Limiter.Consumer)
+    consumer = Keyword.get(opts, :consumer)
     max_requests = Keyword.get(opts, :max_requests)
     parent = Keyword.fetch!(opts, :parent)
     partition_id = Keyword.fetch!(opts, :partition_id)
@@ -80,6 +86,18 @@ defmodule Shopify.GraphQL.Limiter.Partition do
     |> Keyword.put(:parent, parent)
     |> Keyword.put(:partition_id, partition_id)
     |> Keyword.put(:producer, Limiter.Producer.name(parent, partition_id))
+    |> Enum.reject(fn({ _k, v }) -> is_nil(v) end)
+  end
+
+  defp opts_for_partition_monitor(opts) do
+    parent = Keyword.fetch!(opts, :parent)
+    partition_id = Keyword.fetch!(opts, :partition_id)
+    timeout = Keyword.get(opts, :timeout)
+
+    Keyword.new()
+    |> Keyword.put(:parent, parent)
+    |> Keyword.put(:partition_id, partition_id)
+    |> Keyword.put(:timeout, timeout)
     |> Enum.reject(fn({ _k, v }) -> is_nil(v) end)
   end
 
