@@ -1,5 +1,7 @@
 # Shopify.GraphQL
 
+[![Actions Status](https://github.com/malomohq/shopify-graphql/workflows/ci/badge.svg)](https://github.com/malomohq/shopify-graphql/actions)
+
 ## Installation
 
 `shopify_graphql` is published on [Hex](https://hex.pm/packages/shopify_graphql).
@@ -53,11 +55,14 @@ query
 
 ## Configuration
 
-Configuration is passed as a map to the second argument of Shopify.GraphQL.request/2.
+Configuration is passed as a map to the second argument of `Shopify.GraphQL.send/2`.
 
 * `:access_token` - Shopify access token for making authenticated requests
 * `:endpoint` - endpoint for making GraphQL requests. Defaults to
                 `graphql.json`.
+* `:headers` - a list of additional headers to send when making a request.
+               Example: `[{"x-graphql-cost-include-fields", "true"}]`. Defaults
+               to `[]`.
 * `:host` - HTTP host to make requests to. Defaults to `myshopify.com`. Note
             that using `:host` rather than a combination of `:host` and `:shop`
             may be more convenient when working with public apps.

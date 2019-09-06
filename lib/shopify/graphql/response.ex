@@ -1,5 +1,5 @@
 defmodule Shopify.GraphQL.Response do
-  alias Shopify.GraphQL.{ Helpers }
+  alias Shopify.GraphQL.{ Client, Config, Helpers }
 
   @type t ::
           %__MODULE__{
@@ -10,7 +10,7 @@ defmodule Shopify.GraphQL.Response do
 
   defstruct [:body, :headers, :status_code]
 
-  @spec new(Shopify.GraphQL.Client.response_t(), Shopify.GraphQL.Config.t()) :: t
+  @spec new(Client.response_t(), Config.t()) :: t
   def new(response, config) do
     %__MODULE__{
       body: Helpers.JSON.decode(response.body, config),

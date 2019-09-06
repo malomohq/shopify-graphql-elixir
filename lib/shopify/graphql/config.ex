@@ -3,10 +3,13 @@ defmodule Shopify.GraphQL.Config do
           %__MODULE__{
             access_token: String.t(),
             endpoint: String.t(),
+            headers: list({ String.t(), any }),
             host: String.t(),
             http_client: module,
             http_client_opts: any,
             json_codec: module,
+            limiter: atom | boolean,
+            limiter_opts: Keyword.t(),
             path: String.t(),
             port: String.t(),
             protocol: String.t(),
@@ -16,10 +19,13 @@ defmodule Shopify.GraphQL.Config do
 
   defstruct access_token: nil,
             endpoint: "graphql.json",
+            headers: [],
             host: "myshopify.com",
             http_client: Shopify.GraphQL.Client.Hackney,
             http_client_opts: [],
             json_codec: Jason,
+            limiter: false,
+            limiter_opts: [],
             path: "admin/api",
             port: nil,
             protocol: "https",
@@ -33,13 +39,18 @@ defmodule Shopify.GraphQL.Config do
   map of optional overrides. If overrides are provided they will be merged with
   the application configuration.
   """
-  @spec new(map) :: t
-  def new(overrides \\ %{}) do
-    config =
-      Application.get_all_env(:shopify_graphql)
-      |> Enum.into(%{})
-      |> Map.merge(overrides)
+  @spec new(map | t) :: t
+  def new(overrides \\ %__MODULE__{})
+  
+  def new(%__MODULE__{} = overrides) do
+    Application.get_all_env(:shopify_graphql)
+    |> Enum.into(%{})
+    |> Map.merge(overrides)
+  end
 
-    struct(__MODULE__, config)
+  def new(overrides) do
+    overrides = struct(__MODULE__, overrides)
+
+    new(overrides)
   end
 end

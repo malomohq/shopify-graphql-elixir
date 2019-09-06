@@ -1,12 +1,20 @@
 defmodule Shopify.GraphQL.Helpers.URL do
   @moduledoc false
 
-  @spec new(Shopify.GraphQL.Config.t()) :: String.t()
-  def new(config) do
+  alias Shopify.GraphQL.{ Config }
+
+  @spec to_string(Config.t()) :: String.t()
+  def to_string(config) do
+    config
+    |> to_uri()
+    |> URI.to_string()
+  end
+
+  @spec to_uri(Config.t()) :: URI.t()
+  def to_uri(config) do
     %URI{ port: config.port, scheme: config.protocol }
     |> put_host(config)
     |> put_path(config)
-    |> URI.to_string()
   end
 
   defp put_host(uri, %{ shop: shop } = config) when not is_nil(shop) do
