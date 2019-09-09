@@ -13,6 +13,8 @@ defmodule Shopify.GraphQL.Config do
             path: String.t(),
             port: String.t(),
             protocol: String.t(),
+            retry: boolean,
+            retry_opts: Keyword.t(),
             shop: String.t(),
             version: String.t()
           }
@@ -29,6 +31,8 @@ defmodule Shopify.GraphQL.Config do
             path: "admin/api",
             port: nil,
             protocol: "https",
+            retry: false,
+            retry_opts: [],
             shop: nil,
             version: "2019-07"
 
@@ -41,7 +45,7 @@ defmodule Shopify.GraphQL.Config do
   """
   @spec new(map | t) :: t
   def new(overrides \\ %__MODULE__{})
-  
+
   def new(%__MODULE__{} = overrides) do
     Application.get_all_env(:shopify_graphql)
     |> Enum.into(%{})
