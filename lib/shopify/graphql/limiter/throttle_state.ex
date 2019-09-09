@@ -1,8 +1,4 @@
 defmodule Shopify.GraphQL.Limiter.ThrottleState do
-  @moduledoc """
-  Represents the throttle status returned by a Shopify response.
-  """
-
   alias Shopify.GraphQL.{ Response }
 
   @type t ::
