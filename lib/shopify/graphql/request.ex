@@ -14,10 +14,12 @@ defmodule Shopify.GraphQL.Request do
     attempt = Map.get(private, :attempts) + 1
     max_attempts = Keyword.get(config.retry_opts, :max_attempts, 3)
 
+    private = %{ private | attempts: attempt }
+
     result = do_send(operation, config, private)
 
-    if retryable?(result) && max_attempts >= attempt do
-      send(operation, config, %{ private | attempts: attempt })
+    if retryable?(result) && max_attempts > attempt do
+      send(operation, config, private)
     else
       result
     end
