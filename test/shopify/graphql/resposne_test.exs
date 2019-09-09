@@ -7,13 +7,15 @@ defmodule Shopify.GraphQL.ResponseTest do
     config = Config.new()
 
     headers = [{ "content-type", "application/json" }]
+    private = %{ key: "value" }
     status_code = 200
 
-    response = Response.new(%{ body: "{\"ok\":true}", headers: headers, status_code: status_code }, config)
+    response = Response.new(%{ body: "{\"ok\":true}", headers: headers, status_code: status_code }, config, private)
 
     assert %Response {
              body: %{ "ok" => true },
              headers: ^headers,
+             private: ^private,
              status_code: ^status_code
            } = response
   end
