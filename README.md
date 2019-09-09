@@ -79,14 +79,19 @@ Configuration is passed as a map to the second argument of `Shopify.GraphQL.send
                the atom will be used to interact with the limiter process.
                Defaults to `false`.
 * `:limiter_opts` - additional options used with `:limiter`. Defaults to `[]`.
-    `:max_requests` - the maximum number of concurrent requests per shop.
+    * `:max_requests` - the maximum number of concurrent requests per shop.
                       Defaults to 3.
-    `:restore_to` - the minimum cost to begin making requests again after
+    * `:restore_to` - the minimum cost to begin making requests again after
                     being throttled. Possible values are `:half`, `:max` or an
                     integer. Defaults to `:half`.
 * `:path` - path to the admin API. Defaults to `admin/api`.
 * `:port` - the HTTP port used when making requests
 * `:protocol` - the HTTP protocol when making requests. Defaults to `https`.
+* `:retry` - whether to automatically retry failed API calls. Maybe be `true` or
+             `false`. Defaults to `false`.
+* `:retry_opts` - additional options used when performing retries. Defaults to
+                  `[]`.
+    * `:max_attempts` - the maximum number of retries to make. Defaults to `3`.
 * `:shop` - name of the shop that a request is being made to
 * `:version` - version of the API to use. Defaults to `2019-07`.
 
@@ -112,8 +117,6 @@ config value to `Shopify.GraphQL.send/2`.
 ```elixir
 Shopify.GraphQL.send(query, %{access_token: "...", limiter: true})
 ```
-
-Throttling will automatically be managed using the limier.
 
 If you named your process something other than `Shopify.GraphQL.Limiter` you
 will need to pass the name of the process to the `:limiter` config option
