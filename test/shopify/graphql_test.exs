@@ -49,33 +49,5 @@ defmodule Shopify.GraphQLTest do
 
       assert { :ok, %Response{} } = Shopify.GraphQL.send(operation, config)
     end
-
-    test "returns { :ok, %Shopify.GraphQL.Response{} } when response has an HTTP status code of 200", %{ bypass: bypass, config: config } do
-      Bypass.expect(bypass, fn(conn) -> Plug.Conn.send_resp(conn, 200, "{\"ok\":true}") end)
-
-      assert { :ok, %Response{} } = Shopify.GraphQL.send(@query, config)
-    end
-
-    test "returns { :error, %Shopify.GraphQL.Response{} } when response has an HTTP status code of 400", %{ bypass: bypass, config: config } do
-      Bypass.expect(bypass, fn(conn) -> Plug.Conn.send_resp(conn, 400, "{\"ok\":true}") end)
-
-      assert { :error, %Response{} } = Shopify.GraphQL.send(@query, config)
-    end
-
-    test "makes a request", %{ bypass: bypass, config: config } do
-      Bypass.expect(bypass, fn
-        (conn) ->
-          conn = Plug.Parsers.call(conn, Plug.Parsers.init([json_decoder: Jason, parsers: [:json], pass: ["*/*"]]))
-
-          assert conn.body_params == %{ "query" => @query, "variables" => %{ "var" => "a" } }
-          assert conn.method == "POST"
-
-          Plug.Conn.send_resp(conn, 200, "{\"ok\":true}")
-      end)
-
-      @query
-      |> Shopify.GraphQL.put_variable(:var, "a")
-      |> Shopify.GraphQL.send(config)
-    end
   end
 end
