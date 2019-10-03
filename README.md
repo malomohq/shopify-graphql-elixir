@@ -93,7 +93,7 @@ Configuration is passed as a map to the second argument of `Shopify.GraphQL.send
                   `[]`.
     * `:max_attempts` - the maximum number of retries to make. Defaults to 3.
 * `:shop` - name of the shop that a request is being made to
-* `:version` - version of the API to use. Defaults to `2019-07`.
+* `:version` - version of the API to use. Defaults to `2019-10`.
 
 ## Rate Limiting
 
