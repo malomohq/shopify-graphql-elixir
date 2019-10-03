@@ -35,11 +35,12 @@ defmodule Shopify.GraphQL.MixProject do
 
   defp package do
     %{
-      description: "Elixir client for the GraphQL admin API",
+      description: "Elixir client for the Shopify GraphQL admin API",
       maintainers: ["Anthony Smith"],
       licenses: ["MIT"],
       links: %{
-        GitHub: "https://github.com/malomohq/shopify-graphql"
+        GitHub: "https://github.com/malomohq/shopify-graphql-elixir",
+        "Made by Malomo - Post-purchase experiences that customers love": "https://gomalomo.com"
       }
     }
   end
