@@ -1,6 +1,6 @@
 # Shopify.GraphQL
 
-[![Actions Status](https://github.com/malomohq/shopify-graphql/workflows/ci/badge.svg)](https://github.com/malomohq/shopify-graphql/actions)
+[![Actions Status](https://github.com/malomohq/shopify-graphql-elixir/workflows/ci/badge.svg)](https://github.com/malomohq/shopify-graphql-elixir/actions)
 
 ## Installation
 
@@ -10,7 +10,7 @@ Add it to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:shopify_graphql, "~> 1.2"}
+    {:shopify_graphql, "~> 1.3"}
   ]
 end
 ```
