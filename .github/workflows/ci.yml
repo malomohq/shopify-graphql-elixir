@@ -12,9 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@master
-
-      - uses: actions/docker/cli@master
+      - uses: actions/checkout@v1
 
       - name: Pull elixir:${{ matrix.elixir }}-alpine
         run: docker pull elixir:${{ matrix.elixir }}-alpine
@@ -41,9 +39,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@master
-
-      - uses: actions/docker/cli@master
+      - uses: actions/checkout@v1
 
       - name: Pull elixir:${{ matrix.elixir }}-alpine
         run: docker pull elixir:${{ matrix.elixir }}-alpine
