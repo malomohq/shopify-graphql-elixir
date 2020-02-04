@@ -22,7 +22,7 @@ defmodule Shopify.GraphQL.MixProject do
 
   defp deps do
     [
-      { :gen_stage, "~> 0.14", optional: true },
+      { :gen_stage, "~> 1.0", optional: true },
       { :hackney,   "~> 1.15", optional: true },
       { :jason,     "~> 1.1",  optional: true },
       # dev
