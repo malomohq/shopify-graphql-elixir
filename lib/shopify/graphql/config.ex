@@ -34,7 +34,7 @@ defmodule Shopify.GraphQL.Config do
             retry: false,
             retry_opts: [],
             shop: nil,
-            version: "2019-10"
+            version: nil
 
   @doc """
   Build a config struct.
