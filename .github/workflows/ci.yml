@@ -20,7 +20,7 @@ jobs:
           key: dialyzer-${{ hashFiles('mix.lock') }}
           path: _build
 
-      - uses: setup-elixir@v1
+      - uses: actions/setup-elixir@v1
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
@@ -48,7 +48,7 @@ jobs:
           key: test-${{ hashFiles('mix.lock') }}
           path: _build
 
-      - uses: setup-elixir@v1
+      - uses: actions/setup-elixir@v1
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
