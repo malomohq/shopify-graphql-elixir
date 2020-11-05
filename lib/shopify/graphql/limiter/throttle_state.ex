@@ -27,10 +27,9 @@ defmodule Shopify.GraphQL.Limiter.ThrottleState do
     maximum_available = Map.get(throttle_status, "maximumAvailable")
     restore_rate = Map.get(throttle_status, "restoreRate")
 
-    %__MODULE__{
-      currently_available: currently_available,
-      maximum_available: maximum_available,
-      restore_rate: restore_rate
-    }
+    %__MODULE__{}
+    |> Map.put(:currently_available, currently_available)
+    |> Map.put(:maximum_available, maximum_available)
+    |> Map.put(:restore_rate, restore_rate)
   end
 end
