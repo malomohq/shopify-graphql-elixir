@@ -3,6 +3,8 @@ defmodule Shopify.GraphQL.Limiter do
 
   alias Shopify.GraphQL.{ Config, Helpers, Limiter, Operation }
 
+  @type name_t :: atom | { :via, module, { module, String.t() } }
+
   @type partition_id_t :: atom | String.t()
 
   #

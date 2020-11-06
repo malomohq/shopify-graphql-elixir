@@ -14,7 +14,11 @@ defmodule Shopify.GraphQL.Limiter.PartitionMonitor do
   name and a partition id. e.g.
   `Shopify.GraphQL.Limiter.PartitionMonitor:<partition_id>`.
   """
-  @spec name(atom, Limiter.partition_id_t()) :: atom
+  @spec name(Limiter.name_t(), Limiter.partition_id_t()) :: atom
+  def name({ :via, mod, { registry, parent } }, partition_id) do
+    { :via, mod, { registry, name(parent, partition_id) } }
+  end
+  
   def name(parent, partition_id) do
     Module.concat([parent, "PartitionMonitor:#{partition_id}"])
   end

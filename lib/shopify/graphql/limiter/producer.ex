@@ -55,7 +55,11 @@ defmodule Shopify.GraphQL.Limiter.Producer do
   A producer process's name is a combination of the parent limiter's name
   and a partition id. e.g. `Shopify.GraphQL.Limiter.Producer:<partition_id>`.
   """
-  @spec name(atom, Limiter.partition_id_t()) :: atom
+  @spec name(Limiter.name_t(), Limiter.partition_id_t()) :: atom
+  def name({ :via, mod, { registry, parent } }, partition_id) do
+    { :via, mod, { registry, name(parent, partition_id) } }
+  end
+
   def name(parent, partition_id) do
     Module.concat([parent, "Producer:#{partition_id}"])
   end
