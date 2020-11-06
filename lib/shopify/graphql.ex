@@ -61,11 +61,11 @@ defmodule Shopify.GraphQL do
     config = Config.new(config)
 
     cond do
-      config.limiter == true ->
-        Limiter.send(Limiter, operation, config)
       config.limiter == false ->
         Request.send(operation, config)
-      is_atom(config.limiter) ->
+      config.limiter == true ->
+        Limiter.send(Limiter, operation, config)
+      true ->
         Limiter.send(config.limiter, operation, config)
     end
   end
