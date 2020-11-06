@@ -25,10 +25,16 @@ defmodule Shopify.GraphQL.Limiter.PartitionMonitor do
   """
   @spec start_link(Keyword.t()) :: Supervisor.on_start()
   def start_link(opts) do
-    parent = Keyword.fetch!(opts, :parent)
-    partition_id = Keyword.fetch!(opts, :partition_id)
+    monitor = Keyword.get(opts, :monitor, true)
 
-    GenServer.start_link(__MODULE__, opts, name: name(parent, partition_id))
+    if monitor do
+      parent = Keyword.fetch!(opts, :parent)
+      partition_id = Keyword.fetch!(opts, :partition_id)
+
+      GenServer.start_link(__MODULE__, opts, name: name(parent, partition_id))
+    else
+      :ignore
+    end
   end
 
   #

@@ -3,6 +3,34 @@ defmodule Shopify.GraphQL.Limiter.PartitionTest do
 
   alias Shopify.GraphQL.{ Config, Limiter, Operation }
 
+  test "starts a partition monitor when :monitor is true", tags do
+    opts = process_opts(tags)
+    opts = Keyword.put(opts, :monitor, true)
+
+    parent = Keyword.get(opts, :parent)
+    partition_id = Keyword.get(opts, :partition_id)
+
+    partition_monitor = Limiter.PartitionMonitor.name(parent, partition_id)
+
+    { :ok, _pid } = Limiter.Partition.start_link(opts)
+
+    assert Process.whereis(partition_monitor) != nil
+  end
+
+  test "does not start a partition monitor when :monitor is false", tags do
+    opts = process_opts(tags)
+    opts = Keyword.put(opts, :monitor, false)
+
+    parent = Keyword.get(opts, :parent)
+    partition_id = Keyword.get(opts, :partition_id)
+
+    partition_monitor = Limiter.PartitionMonitor.name(parent, partition_id)
+
+    { :ok, _pid } = Limiter.Partition.start_link(opts)
+
+    assert Process.whereis(partition_monitor) == nil
+  end
+
   describe "idle?/1" do
     test "returns true when idling", tags do
       opts = process_opts(tags)

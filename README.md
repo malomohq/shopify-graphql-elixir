@@ -81,6 +81,11 @@ Configuration is passed as a map to the second argument of `Shopify.GraphQL.send
 * `:limiter_opts` - additional options used with `:limiter`. Defaults to `[]`.
     * `:max_requests` - the maximum number of concurrent requests per shop.
                       Defaults to 3.
+    * `:monitor` - whether to monitor a limiter. When set to `true` the limiter
+                   process will be stopped after a certain period of time of inactivity
+                   in order to keep limiter process size to a minimum. When set
+                   to `false` the limiter process will not stop and will stay
+                   alive indefinitely. Default `true`.
     * `:restore_to` - the minimum cost to begin making requests again after
                     being throttled. Possible values are `:half`, `:max` or an
                     integer. Defaults to `:half`.

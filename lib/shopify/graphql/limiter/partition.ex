@@ -90,11 +90,13 @@ defmodule Shopify.GraphQL.Limiter.Partition do
   end
 
   defp opts_for_partition_monitor(opts) do
+    monitor = Keyword.get(opts, :monitor)
     parent = Keyword.fetch!(opts, :parent)
     partition_id = Keyword.fetch!(opts, :partition_id)
     timeout = Keyword.get(opts, :timeout)
 
     Keyword.new()
+    |> Keyword.put(:monitor, monitor)
     |> Keyword.put(:parent, parent)
     |> Keyword.put(:partition_id, partition_id)
     |> Keyword.put(:timeout, timeout)
