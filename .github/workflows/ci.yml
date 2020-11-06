@@ -4,57 +4,61 @@ on: push
 
 jobs:
   dialyzer:
-    strategy:
-      matrix:
-        elixir: ['1.9', '1.10']
-        otp: ['22.2']
-        os: [ubuntu-latest]
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
+
         with:
-          key: dialyzer-${{ hashFiles('mix.lock') }}
+          key: ${{ github.job }}-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('mix.lock') }}-1
+
           path: _build
 
       - uses: actions/setup-elixir@v1
+
         with:
           elixir-version: ${{ matrix.elixir }}
+
           otp-version: ${{ matrix.otp }}
 
-      - name: Run mix deps.get
-        run: mix deps.get
+      - run: mix deps.get
 
-      - name: Run mix dialyzer
-        run: mix dialyzer
+      - run: mix dialyzer
+
+    strategy:
+      matrix:
+        elixir: [1.9.x, 1.10.x, 1.11.x]
+
+        otp: [22.x, 23.x]
 
   test:
-    strategy:
-      matrix:
-        elixir: ['1.9', '1.10']
-        otp: ['22.2']
-        os: [ubuntu-latest]
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
+
         with:
-          key: test-${{ hashFiles('mix.lock') }}
+          key: ${{ github.job }}-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('mix.lock') }}-1
+
           path: _build
 
       - uses: actions/setup-elixir@v1
+
         with:
           elixir-version: ${{ matrix.elixir }}
+
           otp-version: ${{ matrix.otp }}
 
-      - name: Run mix deps.get
-        run: mix deps.get
+      - run: mix deps.get
 
-      - name: Run mix dialyzer
-        run: mix dialyzer
+      - run: mix test
+
+    strategy:
+      matrix:
+        elixir: [1.9.x, 1.10.x, 1.11.x]
+
+        otp: [22.x, 23.x]
