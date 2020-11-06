@@ -1,7 +1,7 @@
 defmodule Shopify.GraphQLTest do
   use ExUnit.Case, async: true
 
-  alias Shopify.GraphQL.{ Operation, Response }
+  alias Shopify.GraphQL.{ Config, Operation, Response }
 
   @query """
     {
@@ -31,7 +31,7 @@ defmodule Shopify.GraphQLTest do
     setup do
       bypass = Bypass.open()
 
-      config = %{ host: "localhost", port: bypass.port, protocol: "http" }
+      config = Config.new(%{ host: "localhost", port: bypass.port, protocol: "http" })
 
       %{ bypass: bypass, config: config }
     end
@@ -43,6 +43,18 @@ defmodule Shopify.GraphQLTest do
     end
 
     test "with operation", %{ bypass: bypass, config: config } do
+      Bypass.expect(bypass, fn(conn) -> Plug.Conn.send_resp(conn, 200, "{\"ok\":true}") end)
+
+      operation = %Operation{ query: @query }
+
+      assert { :ok, %Response{} } = Shopify.GraphQL.send(operation, config)
+    end
+
+    test "with limiter", %{ bypass: bypass, config: config } do
+      config = Map.put(config, :limiter, true)
+
+      Shopify.GraphQL.Limiter.start_link([])
+
       Bypass.expect(bypass, fn(conn) -> Plug.Conn.send_resp(conn, 200, "{\"ok\":true}") end)
 
       operation = %Operation{ query: @query }
