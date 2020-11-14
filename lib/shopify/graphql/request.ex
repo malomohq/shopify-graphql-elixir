@@ -20,10 +20,8 @@ defmodule Shopify.GraphQL.Request do
             url: String.t()
           }
 
-  @spec new(Operation.t(), Keyword.t()) :: t
+  @spec new(Operation.t(), Config.t()) :: t
   def new(operation, config) do
-    config = Config.new(config)
-
     url = Helpers.Url.to_string(config)
 
     headers = []
@@ -45,8 +43,6 @@ defmodule Shopify.GraphQL.Request do
 
   @spec send(t, Config.t()) :: Shopify.GraphQL.http_response_t()
   def send(request, config) do
-    config = Config.new(config)
-
     attempt = Map.get(request.private, :attempt, 0)
 
     attempt = attempt + 1

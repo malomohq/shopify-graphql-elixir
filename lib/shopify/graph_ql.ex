@@ -1,5 +1,5 @@
 defmodule Shopify.GraphQL do
-  alias Shopify.GraphQL.{ Operation, Request, Response }
+  alias Shopify.GraphQL.{ Config, Operation, Request, Response }
 
   @type http_headers_t ::
           [{ String.t(), String.t() }]
@@ -19,6 +19,8 @@ defmodule Shopify.GraphQL do
   end
 
   def send(operation, config) do
+    config = Config.new(config)
+
     operation
     |> Request.new(config)
     |> Request.send(config)
