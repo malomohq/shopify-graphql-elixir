@@ -5,8 +5,6 @@ defmodule Shopify.GraphQL.Http.Hackney do
   def send(request, opts) do
     opts = opts ++ [:with_body]
 
-    IO.inspect request.headers
-
     response =
       :hackney.request(
         request.method,
