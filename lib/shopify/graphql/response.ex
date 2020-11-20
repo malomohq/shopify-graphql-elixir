@@ -5,7 +5,7 @@ defmodule Shopify.GraphQL.Response do
 
   @type t ::
           %__MODULE__{
-            body: String.t(),
+            body: term,
             headers: Shopify.GraphQL.http_headers_t(),
             status_code: Shopify.GraphQL.http_status_code_t()
           }
