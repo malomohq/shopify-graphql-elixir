@@ -10,7 +10,7 @@ Add it to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:shopify_graphql, "~> 1.5"}
+    {:shopify_graphql, "~> 2.0"}
   ]
 end
 ```
@@ -33,7 +33,7 @@ query =
   }
   """
 
-Shopify.GraphQL.send(query)
+Shopify.GraphQL.send(query, access_token: "...", shop: "myshop"))
 ```
 
 You can manage variables using the `Shopify.GraphQL.put_variable/3` function.
@@ -50,12 +50,13 @@ query =
 
 query
 |> Shopify.GraphQL.put_variable(:customerId, "gid://shopify/Customer/12195007594552")
-|> Shopify.GraphQL.send()
+|> Shopify.GraphQL.send(access_token: "...", shop: "myshop")
 ```
 
 ## Configuration
 
-Configuration is passed as a map to the second argument of `Shopify.GraphQL.send/2`.
+All configuration must be provided on a per-request basis as a keyword list to
+the second argument of `Shopify.GraphQL.send/2`.
 
 * `:access_token` - Shopify access token for making authenticated requests
 * `:endpoint` - endpoint for making GraphQL requests. Defaults to
@@ -92,11 +93,10 @@ Configuration is passed as a map to the second argument of `Shopify.GraphQL.send
 * `:path` - path to the admin API. Defaults to `admin/api`.
 * `:port` - the HTTP port used when making requests
 * `:protocol` - the HTTP protocol when making requests. Defaults to `https`.
-* `:retry` - whether to automatically retry failed API calls. Maybe be `true` or
-             `false`. Defaults to `false`.
-* `:retry_opts` - additional options used when performing retries. Defaults to
-                  `[]`.
-    * `:max_attempts` - the maximum number of retries to make. Defaults to 3.
+* `:retry` - module implementing a strategy for retrying requests. Disabled when
+  set to `false`. Defaults to `false`
+* `:retry_opts` - options for configuring retry behavior. Defaults to `[]`.
+    * `:max_attempts` - the maximum number of retries. Defaults to `3`.
 * `:shop` - name of the shop that a request is being made to
 * `:version` - version of the API to use. Defaults to `nil`. According to
   Shopify, when not specifying a version Shopify will use the oldest stable
@@ -122,9 +122,32 @@ config value to `Shopify.GraphQL.send/2`.
 ### Example
 
 ```elixir
-Shopify.GraphQL.send(query, %{access_token: "...", limiter: true})
+Shopify.GraphQL.send(query, access_token: "...", limiter: true, shop: "myshop")
 ```
 
 If you named your process something other than `Shopify.GraphQL.Limiter` you
 will need to pass the name of the process to the `:limiter` config option
 instead of `true`.
+
+## Retries
+
+`shopify_graphql` has a built-in mechanism for retrying requests that either
+return an HTTP status code of 500 or a client error. You can enabled retries
+by providing a module that implements the `Shopify.GraphQL.Retry` behaviour to the
+`:retry` option when calling `Shopify.GraphQL.send/2`.
+
+Currently, `shopify_graphql` provides a `Shopify.GraphQL.Retry.Linear` strategy for
+retrying requests. This strategy will automatically retry a request on a set
+interval. You can configure the interval by adding `:retry_in` with the number
+of milliseconds to wait before sending another request to the `:retry_opts`
+option.
+
+**Example**
+
+```elixir
+Shopify.GraphQL.send("{ shop { name } }", access_token: "...", retry: Shopify.GraphQL.Retry.Linear, retry_opts: [retry_in: 250], shop: "myshop")
+```
+
+The example above would retry a failed request after 250 milliseconds. By
+default `Shopify.GraphQL.Retry.Linear` will retry a request immediately if
+`:retry_in` has no value
