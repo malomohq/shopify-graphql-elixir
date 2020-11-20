@@ -61,16 +61,19 @@ the second argument of `Shopify.GraphQL.send/2`.
 * `:access_token` - Shopify access token for making authenticated requests
 * `:endpoint` - endpoint for making GraphQL requests. Defaults to
                 `graphql.json`.
-* `:headers` - a list of additional headers to send when making a request.
-               Example: `[{"x-graphql-cost-include-fields", "true"}]`. Defaults
-               to `[]`.
-* `:host` - HTTP host to make requests to. Defaults to `myshopify.com`. Note
-            that using `:host` rather than a combination of `:host` and `:shop`
-            may be more convenient when working with public apps.
 * `:http_client` - the HTTP client used for making requests. Defaults to
                    `Shopify.GraphQL.Client.Hackney`.
 * `:http_client_opts` - additional options passed to `:http_client`. Defaults to
                         `[]`.
+* `:http_headers` - a list of additional headers to send when making a request.
+               Example: `[{"x-graphql-cost-include-fields", "true"}]`. Defaults
+               to `[]`.
+* `:http_host` - HTTP host to make requests to. Defaults to `myshopify.com`. Note
+            that using `:host` rather than a combination of `:host` and `:shop`
+            may be more convenient when working with public apps.
+* `:http_path` - path to the admin API. Defaults to `admin/api`.
+* `:http_port` - the HTTP port used when making requests
+* `:http_protocol` - the HTTP protocol when making requests. Defaults to `https`.
 * `:json_codec` - codec for encoding and decoding JSON payloads
 * `:limiter` - whether to use the limiter to manage Shopify rate limiting. May
                be `true`, `false` or an atom. If `false` the limiter will not
@@ -90,9 +93,6 @@ the second argument of `Shopify.GraphQL.send/2`.
     * `:restore_to` - the minimum cost to begin making requests again after
                     being throttled. Possible values are `:half`, `:max` or an
                     integer. Defaults to `:half`.
-* `:path` - path to the admin API. Defaults to `admin/api`.
-* `:port` - the HTTP port used when making requests
-* `:protocol` - the HTTP protocol when making requests. Defaults to `https`.
 * `:retry` - module implementing a strategy for retrying requests. Disabled when
   set to `false`. Defaults to `false`
 * `:retry_opts` - options for configuring retry behavior. Defaults to `[]`.
