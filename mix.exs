@@ -10,7 +10,14 @@ defmodule Shopify.GraphQL.MixProject do
       deps: deps(),
       dialyzer: [plt_add_apps: [:gen_stage, :hackney]],
       elixirc_paths: elixirc_paths(Mix.env()),
-      package: package()
+      package: package(),
+      xref: [
+        exclude: [
+          Shopify.GraphQL.Limiter.Partition,
+          Shopify.GraphQL.Limiter.PartitionMonitor,
+          Shopify.GraphQL.Limiter.Producer
+        ]
+      ]
     ]
   end
 

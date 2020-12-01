@@ -12,6 +12,8 @@ defmodule Shopify.GraphQL.Limiter do
 
   @spec send(Limiter.name_t(), Request.t(), Config.t()) :: Shopify.GraphQL.http_response_t()
   def send(limiter, request, config) do
+    ensure_gen_stage_loaded!()
+
     id = config |> Helpers.Url.to_uri() |> Map.get(:host)
 
     partition = Limiter.Partition.name(limiter, id)
@@ -23,6 +25,8 @@ defmodule Shopify.GraphQL.Limiter do
 
   @spec start_link(Keyword.t()) :: Supervisor.on_start()
   def start_link(opts) do
+    ensure_gen_stage_loaded!()
+    
     name = Keyword.get(opts, :name, __MODULE__)
 
     DynamicSupervisor.start_link(__MODULE__, :ok, name: name)
@@ -43,6 +47,15 @@ defmodule Shopify.GraphQL.Limiter do
         { :ok, pid }
       otherwise ->
         otherwise
+    end
+  end
+
+  defp ensure_gen_stage_loaded! do
+    unless Code.ensure_loaded?(GenStage) do
+      raise """
+      You are trying to use Shopify.GraphQL.Limiter but GenStage is not loaded.
+      Make sure you have defined gen_stage as a dependency.
+      """
     end
   end
 
