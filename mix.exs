@@ -4,7 +4,7 @@ defmodule Shopify.GraphQL.MixProject do
   def project do
     [
       app: :shopify_graphql,
-      version: "1.6.0",
+      version: "1.6.1",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -22,7 +22,7 @@ defmodule Shopify.GraphQL.MixProject do
 
   defp deps do
     [
-      { :gen_stage, ">= 0.14.0 and < 2.0.0", optional: true },
+      { :gen_stage, ">= 0.14.0 and < 2.0.0" },
       { :hackney,   "~> 1.15", optional: true },
       { :jason,     "~> 1.1",  optional: true },
       # dev
