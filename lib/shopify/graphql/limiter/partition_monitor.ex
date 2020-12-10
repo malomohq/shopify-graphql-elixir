@@ -27,7 +27,7 @@ if Code.ensure_loaded?(GenStage) do
 
     @spec start(Supervisor.name()) :: reference
     def start(partition) do
-      Process.send_after(pid(partition), :check, 3_500)
+      Process.send_after(pid(partition), :check, 15_000)
     end
 
     @spec start_link(Keyword.t()) :: GenServer.on_start()
