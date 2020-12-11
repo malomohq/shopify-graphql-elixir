@@ -25,7 +25,7 @@ if Code.ensure_loaded?(GenStage) do
 
     @spec start_link(Keyword.t()) :: GenServer.on_start()
     def start_link(opts) do
-      GenStage.start_link(__MODULE__, opts, name: name(opts[:partition]))
+      GenStage.start_link(__MODULE__, opts, hibernate_after: 3_500, name: name(opts[:partition]))
     end
 
     @spec wait_and_retry(Limiter.name_t(), map, non_neg_integer) :: :ok
