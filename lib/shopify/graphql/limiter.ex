@@ -26,7 +26,7 @@ defmodule Shopify.GraphQL.Limiter do
   @spec start_link(Keyword.t()) :: Supervisor.on_start()
   def start_link(opts) do
     ensure_gen_stage_loaded!()
-    
+
     name = Keyword.get(opts, :name, __MODULE__)
 
     DynamicSupervisor.start_link(__MODULE__, :ok, name: name)
@@ -42,7 +42,7 @@ defmodule Shopify.GraphQL.Limiter do
 
     case DynamicSupervisor.start_child(limiter, spec) do
       { :error, { :already_started, pid } } ->
-        :ok = Limiter.PartitionMonitor.restart(partition)
+        Limiter.PartitionMonitor.restart(partition, limiter_opts)
 
         { :ok, pid }
       otherwise ->

@@ -8,6 +8,11 @@ if Code.ensure_loaded?(GenStage) do
     # client
     #
 
+    @spec monitor?(Keyword.t()) :: boolean
+    def monitor?(limiter_opts) do
+      Keyword.get(limiter_opts, :monitor, true)
+    end
+
     @spec name(Supervisor.name()) :: Supervisor.name()
     def name(partition) do
       Helpers.Limiter.process_name(partition, PartitionMonitor)
@@ -20,21 +25,23 @@ if Code.ensure_loaded?(GenStage) do
       |> Helpers.Limiter.pid()
     end
 
-    @spec restart(Supervisor.name()) :: :ok
-    def restart(partition) do
-      GenServer.call(name(partition), :restart)
+    @spec restart(Supervisor.name(), Keyword.t()) :: :ok
+    def restart(partition, limiter_opts) do
+      if monitor?(limiter_opts) do
+        GenServer.call(name(partition), :restart)
+      else
+        :ok
+      end
     end
 
     @spec start(Supervisor.name()) :: reference
     def start(partition) do
-      Process.send_after(pid(partition), :check, 15_000)
+      Process.send_after(pid(partition), :check, 3_500)
     end
 
     @spec start_link(Keyword.t()) :: GenServer.on_start()
     def start_link(opts) do
-      monitor = Keyword.get(opts[:limiter_opts], :monitor, true)
-
-      if monitor do
+      if monitor?(opts[:limiter_opts]) do
         GenServer.start_link(__MODULE__, opts, name: name(opts[:partition]))
       else
         :ignore
