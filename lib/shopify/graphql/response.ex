@@ -15,11 +15,17 @@ defmodule Shopify.GraphQL.Response do
     body =
       response
       |> Map.get(:body)
-      |> config.json_codec.decode!()
+      |> decode_body(config)
 
     %__MODULE__{}
     |> Map.put(:body, body)
     |> Map.put(:headers, Map.get(response, :headers))
     |> Map.put(:status_code, Map.get(response, :status_code))
+  end
+
+  defp decode_body(body, _) when is_map(body), do: body
+
+  defp decode_body(body, config) do
+    config.json_codec.decode!(body)
   end
 end
