@@ -68,4 +68,15 @@ defmodule Shopify.GraphQLTest do
 
     assert ^response = result
   end
+
+  test "properly handles retries" do
+    Http.Mock.start_link()
+
+    Http.Mock.put_response({ :error, :timeout })
+    Http.Mock.put_response({ :ok, @ok_resp })
+
+    result = Shopify.GraphQL.send("{ shop { name } }", http_client: Http.Mock, retry: Shopify.GraphQL.Retry.Linear)
+
+    assert { :ok, %Response{} } = result
+  end
 end
