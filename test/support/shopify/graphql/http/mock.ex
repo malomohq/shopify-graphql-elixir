@@ -90,7 +90,9 @@ defmodule Shopify.GraphQL.Http.Mock do
 
   @impl true
   def handle_call(:get_response, _from, state) do
-    { :reply, Map.get(state, :response), state }
+    [h | t] = Map.get(state, :responses, [])
+
+    { :reply, h, Map.put(state, :responses, t) }
   end
 
   @impl true
@@ -115,6 +117,9 @@ defmodule Shopify.GraphQL.Http.Mock do
 
   @impl true
   def handle_call({ :put_response, response }, _from, state) do
-    { :reply, :ok, Map.put(state, :response, response) }
+    responses = Map.get(state, :responses, [])
+    responses = responses ++ [response]
+
+    { :reply, :ok, Map.put(state, :responses, responses) }
   end
 end
