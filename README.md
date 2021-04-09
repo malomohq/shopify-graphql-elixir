@@ -10,7 +10,7 @@ Add it to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:shopify_graphql, "~> 2.0"}
+    {:shopify_graphql, "~> 2.0.0-rc.5"}
   ]
 end
 ```
