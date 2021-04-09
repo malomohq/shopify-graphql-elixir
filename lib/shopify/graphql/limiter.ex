@@ -30,7 +30,7 @@ defmodule Shopify.GraphQL.Limiter do
     DynamicSupervisor.start_link(__MODULE__, :ok, name: name)
   end
 
-  @spec start_partition(atom, Config.t()) :: { :ok, pid } | { :error, term }
+  @spec start_partition(Limiter.name_t(), Config.t()) :: { :ok, pid } | { :error, term }
   def start_partition(limiter, config) do
     partition = Limiter.Partition.name(limiter, config)
 
