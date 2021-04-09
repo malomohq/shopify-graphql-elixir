@@ -2,7 +2,7 @@ if Code.ensure_loaded?(GenStage) do
   defmodule Shopify.GraphQL.Limiter.Partition do
     use Supervisor, restart: :temporary
 
-    alias Shopify.GraphQL.{ Helpers, Limiter }
+    alias Shopify.GraphQL.{ Config, Helpers, Limiter }
 
     #
     # client
@@ -14,8 +14,10 @@ if Code.ensure_loaded?(GenStage) do
       Limiter.ConsumerSupervisor.idle?(partition)
     end
 
-    @spec name(Supervisor.name(), atom) :: Supervisor.name()
-    def name(limiter, id) do
+    @spec name(Supervisor.name(), Config.t()) :: Supervisor.name()
+    def name(limiter, config) do
+      id = config |> Helpers.Url.to_uri() |> Map.get(:host)
+
       Helpers.Limiter.process_name(limiter, :"Partition:#{id}")
     end
 
