@@ -74,9 +74,6 @@ if Code.ensure_loaded?(GenStage) do
 
         demand = demand - event_len
 
-        IO.inspect "send: #{demand}"
-        IO.inspect "send event_len: #{event_len}"
-
         { :noreply, events, %{ state | demand: demand, queue: queue } }
       end
     end
@@ -94,15 +91,12 @@ if Code.ensure_loaded?(GenStage) do
 
     @impl true
     def handle_demand(demand, state) do
-      demand = demand + state[:demand]
-      IO.inspect "handle_demand: #{demand}"
+      demand = demand + Map.get(state, :demand, 3)
 
       if state[:waiting] do
         { :noreply, [], %{ state | demand: demand } }
       else
         { { events, event_len }, queue } = Helpers.Queue.take(state[:queue], demand)
-
-        IO.inspect "handle_demand event_len: #{event_len}"
 
         demand = demand - event_len
 
