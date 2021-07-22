@@ -55,8 +55,8 @@ defmodule Shopify.GraphQL do
 
       Shopify.GraphQL.send(query)
 
-  You may also pass an optional map of config overrides. This allows you to
-  use different config values on a per-request basis.
+  You must also pass configuration as a keyword list to the second argument.
+  This allows you to use different config values on a per-request basis.
   """
   @spec send(String.t() | Operation.t(), Keyword.t()) :: http_response_t
   def send(query, config) when is_binary(query) do
