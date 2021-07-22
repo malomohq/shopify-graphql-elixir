@@ -38,9 +38,11 @@ if Code.ensure_loaded?(GenStage) do
 
       max_demand = Keyword.get(limiter_opts, :max_requests, 3)
 
+      min_demand = 1
+
       producer = Limiter.Producer.name(partition)
 
-      ConsumerSupervisor.init(children(), strategy: :one_for_one, subscribe_to: [{ producer, max_demand: max_demand }])
+      ConsumerSupervisor.init(children(), strategy: :one_for_one, subscribe_to: [{ producer, min_demand: min_demand, max_demand: max_demand }])
     end
 
     defp children do
