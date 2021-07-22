@@ -16,7 +16,7 @@ defmodule Shopify.GraphQL.Limiter do
 
     partition = Limiter.Partition.name(limiter, config)
 
-    { :ok, _ } = start_partition(limiter, config)
+    start_partition(limiter, config)
 
     Limiter.Producer.send(partition, request, config)
   end
@@ -41,10 +41,8 @@ defmodule Shopify.GraphQL.Limiter do
     spec = { Limiter.Partition, opts }
 
     case DynamicSupervisor.start_child(limiter, spec) do
-      { :error, { :already_started, pid } } ->
-        Limiter.PartitionMonitor.restart(partition, config.limiter_opts)
-
-        { :ok, pid }
+      { :error, { :already_started, _pid } } ->
+        :ignore
       otherwise ->
         otherwise
     end
