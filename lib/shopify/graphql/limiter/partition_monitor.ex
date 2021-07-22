@@ -25,7 +25,7 @@ if Code.ensure_loaded?(GenStage) do
       |> Helpers.Limiter.pid()
     end
 
-    @spec start(Supervisor.name()) :: reference
+    @spec start(Supervisor.name(), Keyword.t()) :: reference
     def start(partition, limiter_opts) do
       timeout = Keyword.get(limiter_opts, :monitor_timeout, 3_500)
 
@@ -47,11 +47,14 @@ if Code.ensure_loaded?(GenStage) do
 
     @impl true
     def init(opts) do
+      limiter_opts = Keyword.get(opts, :limiter_opts, [])
+
       partition = Keyword.get(opts, :partition)
 
       state = Map.new()
+      state = Map.put(state, :limiter_opts, limiter_opts)
       state = Map.put(state, :partition, partition)
-      state = Map.put(state, :timer, start(partition))
+      state = Map.put(state, :timer, start(partition, limiter_opts))
 
       { :ok, state }
     end
@@ -63,7 +66,7 @@ if Code.ensure_loaded?(GenStage) do
       if Limiter.Partition.idle?(partition) do
         Supervisor.stop(partition)
       else
-        { :noreply, %{ state | timer: start(partition) } }
+        { :noreply, %{ state | timer: start(partition, state[:limiter_opts]) } }
       end
     end
   end
