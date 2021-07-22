@@ -90,6 +90,8 @@ the second argument of `Shopify.GraphQL.send/2`.
                    in order to keep limiter process size to a minimum. When set
                    to `false` the limiter process will not stop and will stay
                    alive indefinitely. Default `true`.
+    * `:monitor_timeout` - number of miliseconds to check for inactivity before
+                           stopping a partition
     * `:restore_to` - the minimum cost to begin making requests again after
                     being throttled. Possible values are `:half`, `:max` or an
                     integer. Defaults to `:half`.
