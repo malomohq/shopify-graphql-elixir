@@ -25,18 +25,11 @@ if Code.ensure_loaded?(GenStage) do
       |> Helpers.Limiter.pid()
     end
 
-    @spec restart(Supervisor.name(), Keyword.t()) :: :ok
-    def restart(partition, limiter_opts) do
-      if monitor?(limiter_opts) do
-        GenServer.call(name(partition), :restart)
-      else
-        :ok
-      end
-    end
-
     @spec start(Supervisor.name()) :: reference
-    def start(partition) do
-      Process.send_after(pid(partition), :check, 3_500)
+    def start(partition, limiter_opts) do
+      timeout = Keyword.get(limiter_opts, :monitor_timeout, 3_500)
+
+      Process.send_after(pid(partition), :check, timeout)
     end
 
     @spec start_link(Keyword.t()) :: GenServer.on_start()
@@ -61,13 +54,6 @@ if Code.ensure_loaded?(GenStage) do
       state = Map.put(state, :timer, start(partition))
 
       { :ok, state }
-    end
-
-    @impl true
-    def handle_call(:restart, _from, state) do
-      Process.cancel_timer(state[:timer])
-
-      { :reply, :ok, %{ state | timer: start(state[:partition]) } }
     end
 
     @impl true
