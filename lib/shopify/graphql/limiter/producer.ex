@@ -20,7 +20,7 @@ if Code.ensure_loaded?(GenStage) do
 
     @spec send(Limiter.name_t(), Request.t(), Config.t()) :: Shopify.GraphQL.http_response_t()
     def send(partition, request, config) do
-      GenStage.call(name(partition), { :send, request, config }, :infinity)
+      GenStage.call(name(partition), { :send, node(), request, config }, :infinity)
     end
 
     @spec start_link(Keyword.t()) :: GenServer.on_start()
@@ -40,11 +40,14 @@ if Code.ensure_loaded?(GenStage) do
     @impl true
     def init(opts) do
       state = Map.new()
+      state = Map.put(state, :dead_owners, [])
       state = Map.put(state, :demand, 0)
       state = Map.put(state, :limiter_opts, opts[:limiter_opts])
       state = Map.put(state, :partition, opts[:partition])
       state = Map.put(state, :queue, :queue.new())
       state = Map.put(state, :waiting, false)
+
+      Process.send_after(self(), :sweep_dead_owners, 5_000)
 
       { :producer, state }
     end
@@ -55,12 +58,15 @@ if Code.ensure_loaded?(GenStage) do
     end
 
     @impl true
-    def handle_call({ :send, request, config }, from, state) do
+    def handle_call({ :send, node, request, config }, { pid, _ref } = from, state) do
+      Process.monitor(pid)
+
       event = Map.new()
       event = Map.put(event, :config, config)
       event = Map.put(event, :limiter_opts, state[:limiter_opts])
       event = Map.put(event, :partition, state[:partition])
       event = Map.put(event, :request, request)
+      event = Map.put(event, :node, node)
       event = Map.put(event, :owner, from)
 
       queue = :queue.in(event, state[:queue])
@@ -82,7 +88,15 @@ if Code.ensure_loaded?(GenStage) do
     def handle_call({ :wait_and_retry, event, wait_for }, _from, state) do
       state[:timer] && Process.cancel_timer(state[:timer])
 
-      state = Map.put(state, :queue, :queue.in_r(event, state[:queue]))
+      dead_owners = Map.get(state, :dead_owners)
+
+      { pid, _ } = event[:owner]
+
+      alive? = !Enum.any?(dead_owners, fn({ dead_pid, _ }) -> dead_pid == pid end)
+
+      queue = (alive? && :queue.in_r(event, state[:queue])) || state[:queue]
+
+      state = Map.put(state, :queue, queue)
       state = Map.put(state, :timer, Process.send_after(self(), :start, wait_for))
       state = Map.put(state, :waiting, true)
 
@@ -105,6 +119,17 @@ if Code.ensure_loaded?(GenStage) do
     end
 
     @impl true
+    def handle_info({ :DOWN, _ref, :process, pid, _reason }, state) do
+      dead_owners = Map.get(state, :dead_owners)
+      dead_owners = dead_owners ++ [{ pid, DateTime.utc_now() }]
+
+      queue = Map.get(state, :queue)
+      queue = :queue.delete_with(fn(%{ owner: { owner, _ } }) -> owner == pid end, queue)
+
+      { :noreply, [], %{ state | dead_owners: dead_owners, queue: queue } }
+    end
+
+    @impl true
     def handle_info(:start, state) do
       demand = Map.get(state, :demand)
 
@@ -118,6 +143,17 @@ if Code.ensure_loaded?(GenStage) do
       state = Map.put(state, :waiting, false)
 
       { :noreply, events, state }
+    end
+
+    def handle_info(:sweep_dead_owners, state) do
+      now = DateTime.utc_now()
+
+      dead_owners = Map.get(state, :dead_owners)
+      dead_owners = Enum.drop_while(dead_owners, fn({ _, time_of_death }) -> DateTime.diff(now, time_of_death) >= 45 end)
+
+      Process.send_after(self(), :sweep_dead_owners, 5_000)
+
+      { :noreply, [], %{ state | dead_owners: dead_owners } }
     end
   end
 end
