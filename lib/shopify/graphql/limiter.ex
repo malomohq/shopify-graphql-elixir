@@ -48,6 +48,19 @@ defmodule Shopify.GraphQL.Limiter do
     end
   end
 
+  @doc """
+  Returns `true` if requests are currently being throttled due to rate limiting.
+  Otherwise, returns `false`.
+  """
+  @spec throttled?(Limiter.name_t(), Keyword.t()) :: boolean
+  def throttled?(limiter, config) do
+    config = Config.new(config)
+
+    limiter
+    |> Limiter.Partition.name(config)
+    |> Limiter.Producer.waiting?()
+  end
+
   defp ensure_gen_stage_loaded! do
     unless Code.ensure_loaded?(GenStage) do
       raise """

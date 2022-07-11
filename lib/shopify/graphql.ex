@@ -76,6 +76,5 @@ defmodule Shopify.GraphQL do
       true ->
         Limiter.send(config.limiter, request, config)
     end
-
   end
 end

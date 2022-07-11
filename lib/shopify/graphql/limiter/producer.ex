@@ -28,6 +28,11 @@ if Code.ensure_loaded?(GenStage) do
       GenStage.start_link(__MODULE__, opts, hibernate_after: 3_500, name: name(opts[:partition]))
     end
 
+    @spec waiting?(Limiter.name_t()) :: boolean
+    def waiting?(partition) do
+      GenStage.call(name(partition), :waiting?)
+    end
+
     @spec wait_and_retry(Limiter.name_t(), map, non_neg_integer) :: :ok
     def wait_and_retry(partition, event, wait_for) do
       GenStage.call(name(partition), { :wait_and_retry, event, wait_for })
@@ -82,6 +87,11 @@ if Code.ensure_loaded?(GenStage) do
 
         { :noreply, events, %{ state | demand: demand, queue: queue } }
       end
+    end
+
+    @impl true
+    def handle_call(:waiting?, _from, state) do
+      { :reply, state[:waiting], [], state }
     end
 
     @impl true
