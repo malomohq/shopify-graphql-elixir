@@ -4,7 +4,7 @@ defmodule Shopify.GraphQL.MixProject do
   def project do
     [
       app: :shopify_graphql,
-      version: "2.0.0-rc.10",
+      version: "2.0.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -29,33 +29,26 @@ defmodule Shopify.GraphQL.MixProject do
 
   defp deps do
     [
-      { :gen_stage, ">= 0.14.0 and < 2.0.0", optional: true },
-
-      { :hackney,   "~> 1.15", optional: true },
-
-      { :jason,     "~> 1.1",  optional: true },
+      {:gen_stage, ">= 0.14.0 and < 2.0.0", optional: true},
+      {:hackney, "~> 1.15", optional: true},
+      {:jason, "~> 1.1", optional: true},
 
       #
       # dev
       #
 
-      { :dialyxir, "~> 1.0", only: :dev, runtime: false },
-
-      { :ex_doc,   "> 0.0.0",   only: :dev, runtime: false }
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
+      {:ex_doc, "> 0.0.0", only: :dev, runtime: false}
     ]
   end
 
   defp package do
     %{
       description: "Elixir client for the Shopify GraphQL admin API",
-
       maintainers: ["Anthony Smith"],
-
       licenses: ["MIT"],
-
       links: %{
         GitHub: "https://github.com/malomohq/shopify-graphql-elixir",
-
         "Made by Malomo - Post-purchase experiences that customers love": "https://gomalomo.com"
       }
     }
