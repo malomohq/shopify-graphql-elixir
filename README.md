@@ -36,7 +36,8 @@ query =
 Shopify.GraphQL.send(query, access_token: "...", shop: "myshop"))
 ```
 
-You can manage variables using the `Shopify.GraphQL.put_variable/3` function.
+You can manage variables using the `Shopify.GraphQL.put_variable/3` and 
+`Shopify.GraphQL.put_variables/2` functions.
 
 ```elixir
 query =
@@ -50,6 +51,10 @@ query =
 
 query
 |> Shopify.GraphQL.put_variable(:customerId, "gid://shopify/Customer/12195007594552")
+|> Shopify.GraphQL.send(access_token: "...", shop: "myshop")
+
+query
+|> Shopify.GraphQL.put_variables(%{customerId: "gid://shopify/Customer/12195007594552"})
 |> Shopify.GraphQL.send(access_token: "...", shop: "myshop")
 ```
 

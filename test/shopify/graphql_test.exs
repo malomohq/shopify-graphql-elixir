@@ -7,6 +7,58 @@ defmodule Shopify.GraphQLTest do
 
   @not_ok_resp %{ body: "{\"ok\":false}", headers: [], status_code: 400 }
 
+  describe "put_variables/2" do
+    test "puts variables when query is provided" do
+      query = """
+      {
+        shop {
+          name
+        }
+      }
+      """
+
+      variables = %{test: "test"}
+
+      assert %Shopify.GraphQL.Operation{query: query, variables: variables} ==
+        Shopify.GraphQL.put_variables(query, variables)
+    end
+
+    test "puts variables when operation is provided" do
+      query = """
+      {
+        shop {
+          name
+        }
+      }
+      """
+
+      operation = %Shopify.GraphQL.Operation{query: query}
+
+      variables = %{test: "test"}
+
+      assert %Shopify.GraphQL.Operation{query: query, variables: variables} ==
+        Shopify.GraphQL.put_variables(operation, variables)
+    end
+
+    test "merges variables" do
+      query = """
+      {
+        shop {
+          name
+        }
+      }
+      """
+
+      operation = %Shopify.GraphQL.Operation{query: query, variables: %{one: "one"}}
+
+      variables = %{two: "two"}
+
+      assert %Shopify.GraphQL.Operation{query: query, variables: %{one: "one", two: "two"}} ==
+        Shopify.GraphQL.put_variables(operation, variables)
+    end
+  end
+
+
   test "sends a POST request" do
     Http.Mock.start_link()
 
