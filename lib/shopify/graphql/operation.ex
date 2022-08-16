@@ -17,4 +17,15 @@ defmodule Shopify.GraphQL.Operation do
 
     %{ operation | variables: variables }
   end
+
+  @spec put_variables(binary | t, map) :: t
+  def put_variables(query, variables) when is_binary(query) do
+    put_variables(%__MODULE__{query: query}, variables)
+  end
+
+  def put_variables(operation, variables) do
+    variables = Map.merge(operation.variables, variables)
+
+    %{operation | variables: variables}
+  end
 end

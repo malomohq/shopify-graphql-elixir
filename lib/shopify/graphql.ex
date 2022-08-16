@@ -24,6 +24,16 @@ defmodule Shopify.GraphQL do
     to: Operation
 
   @doc """
+  Add variables to the operation.
+
+  It's possible to pass either a `Shopify.GraphQL.Operation` struct or, as a
+  convenience, a binary query.
+  """
+  @spec put_variables(binary | Operation.t(), map) :: Operation.t()
+  defdelegate put_variables(operation_or_query, map),
+    to: Operation
+
+  @doc """
   Send a GraphQL operation to Shopify.
 
   It's possible to send either a `Shopify.GraphQL.Operation` struct or, as a
