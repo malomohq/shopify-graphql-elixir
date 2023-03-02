@@ -1,13 +1,22 @@
 version: 2
 
 updates:
-  - package-ecosystem: mix
+    - package-ecosystem: github-actions
 
-    directory: "/"
+      directory: "/"
 
-    schedule:
-      interval: daily
+      schedule:
+          interval: daily
 
-    open-pull-requests-limit: 10
+      target-branch: master
 
-    target-branch: master
+    - package-ecosystem: mix
+
+      directory: "/"
+
+      schedule:
+          interval: daily
+
+      open-pull-requests-limit: 10
+
+      target-branch: master
