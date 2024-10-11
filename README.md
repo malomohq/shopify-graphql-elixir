@@ -177,7 +177,7 @@ defmodule BigPool.Application do
   def start(_type, _args) do
     children = [
       ...
-      :hackney_pool.child_spec(:my_big_pool, timeout: 60_000, recv_timeout: 60_000, max_connections: 1000)
+      :hackney_pool.child_spec(:my_big_pool, max_connections: 1000)
       ...
     ]
 
