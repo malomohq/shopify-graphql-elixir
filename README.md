@@ -170,7 +170,7 @@ under http_client_opts in the config.
 
 Start a new hackney pool in `application.ex` on application startup:
 
-```
+```elixir
 defmodule BigPool.Application do
   use Application
 
@@ -189,7 +189,7 @@ end
 
 And then specify the new pool name in the request config:
 
-```
+```elixir
 config = [
   ...
   http_client_opts: [pool: :my_big_pool]
