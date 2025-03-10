@@ -158,3 +158,54 @@ Shopify.GraphQL.send("{ shop { name } }", access_token: "...", retry: Shopify.Gr
 The example above would retry a failed request after 250 milliseconds. By
 default `Shopify.GraphQL.Retry.Linear` will retry a request immediately if
 `:retry_in` has no value
+
+## Connection Pooling
+
+The out-of-the-box HTTP client, `Shopify.GraphQL.Client.Hackney`, uses hackney's `:default`
+connection pool. This pool has a maxiumum of `50` connections. You can tell
+`shopify_graphql` to use a different connection pool by specifying the pool name
+under http_client_opts in the config.
+
+**Example**
+
+Start a new hackney pool in `application.ex` on application startup:
+
+```elixir
+defmodule BigPool.Application do
+  use Application
+
+  def start(_type, _args) do
+    children = [
+      ...
+      :hackney_pool.child_spec(:my_big_pool, max_connections: 1000)
+      ...
+    ]
+
+    opts = [strategy: :one_for_one, name: BigPool.Supervisor]
+    _result = Supervisor.start_link(children, opts)
+  end
+end
+```
+
+And then specify the new pool name in the request config:
+
+```elixir
+config = [
+  ...
+  http_client_opts: [pool: :my_big_pool]
+  ...
+]
+
+query =
+  """
+  {
+    shop {
+      name
+    }
+  }
+  """
+
+Shopify.GraphQL.send(query, config)
+
+```
+
