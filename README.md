@@ -33,7 +33,7 @@ query =
   }
   """
 
-Shopify.GraphQL.send(query, access_token: "...", shop: "myshop"))
+Shopify.GraphQL.send(query, access_token: "...", shop: "myshop")
 ```
 
 You can manage variables using the `Shopify.GraphQL.put_variable/3` and 
